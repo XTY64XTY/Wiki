@@ -17,6 +17,45 @@ Xdows Security 4.1 是一个基于 `WinUI3` + `C#` 技术构建的杀毒软件�
 > 
 > 请使用加速器或者加入 QQ 群下载
 
+## 常见问题 {#Question}
+
+### 无法使用 SouXiao 引擎
+
+请确保你的设备中安装了 `Visual C++ Redistributable v14` 或其替代方案
+
+| 体系结构 | 链接 | 备注 |
+|---------|------|------|
+| ARM64 | <https://aka.ms/vc14/vc_redist.arm64.exe> | 最新受支持 ARM64 版本的永久链接 |
+| X86 | <https://aka.ms/vc14/vc_redist.x86.exe> | 最新受支持 x86 版本的永久链接 |
+| X64 | <https://aka.ms/vc14/vc_redist.x64.exe> | 最新受支持 x64 版本的永久链接。X64 可再发行程序包包含 ARM64 和 X64 二进制文件。当 X64 可再发行程序包安装在 ARM64 设备上时，可以通过此包轻松安装所需的 Visual C++ ARM64 二进制文件。 |
+（取自 [Microsoft Learn](https://learn.microsoft.com/zh-cn/cpp/windows/latest-supported-vc-redist?view=msvc-170)）
+
+### Windows App SDK 不存在
+
+> [!NOTE] 正常不会出现
+> 
+> 下载的 Xdows Security 应自包含所需 Windows App SDK 如果失效或其它问题才会出现这个问题
+
+在 [Microsoft Learn](https://learn.microsoft.com/zh-cn/windows/apps/windows-app-sdk/downloads) 中下载 Windows App SDK
+
+> [!NOTE] 关于运行后出现的控制台窗口
+> 
+> 这是正常现象，安装完成后可自行退出（如果没有自动关闭的话）
+
+> [!NOTE] 安装完成后还是提示不存在
+> 
+> Windows App SDK 在本文编写时没有向后兼容性，请确保下载版本与所需版本一致（既不能过高也不能过低）
+### 没有安装 .NET
+
+> [!NOTE] 正常不会出现
+> 
+> 下载的 Xdows Security 应自包含所需 .NET 如果失效或其它问题才会出现这个问题
+
+在 [Microsoft 官网](https://dotnet.microsoft.com/zh-cn/download) 中下载所需的 .NET 版本
+
+> [!NOTE] 安装完成后还是提示不存在
+> 
+> .NET 在本文编写时大版本没有向后兼容性，请确保下载版本的大版本与所需版本一致（既不能过高也不能过低）
 ## 扫描引擎 {#Engine}
 
 | 名称 | 介绍 | 开源 |
