@@ -95,7 +95,7 @@ export default withMermaid({
           copyright: 'Xdows Software 版权所有'
         },
         editLink: {
-          pattern: 'https://github.com/XTY64XTY12345/Wiki/edit/main/docs/:path',
+          pattern: 'https://github.com/XTY64XTY/Wiki/edit/main/docs/:path',
           text: '在 GitHub 上编辑此页面',
         },
     
