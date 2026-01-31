@@ -28,6 +28,7 @@ Xdows Security 4.1 是一个基于 `WinUI3` + `C#` 技术构建的杀毒软件�
 | ARM64 | <https://aka.ms/vc14/vc_redist.arm64.exe> | 最新受支持 ARM64 版本的永久链接 |
 | X86 | <https://aka.ms/vc14/vc_redist.x86.exe> | 最新受支持 x86 版本的永久链接 |
 | X64 | <https://aka.ms/vc14/vc_redist.x64.exe> | 最新受支持 x64 版本的永久链接。X64 可再发行程序包包含 ARM64 和 X64 二进制文件。当 X64 可再发行程序包安装在 ARM64 设备上时，可以通过此包轻松安装所需的 Visual C++ ARM64 二进制文件。 |
+
 （取自 [Microsoft Learn](https://learn.microsoft.com/zh-cn/cpp/windows/latest-supported-vc-redist?view=msvc-170)）
 
 ### Windows App SDK 不存在
