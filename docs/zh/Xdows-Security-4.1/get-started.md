@@ -62,13 +62,13 @@ Xdows Security 4.1 是一个基于 `WinUI3` + `C#` 技术构建的杀毒软件�
 | 名称 | 介绍 | 开源 |
 |-----|------|------|
 | Xdows Local | 使用导入表、导出表等多种方式分析 PE 文件 | 全部开源 |
-| SouXiao | 由 `Mint` 提供扫描引擎，基于多种分析方式| 不开源 |
+| SouXiao | 由 `Mint` 提供扫描引擎，基于多种分析方式| 部分开源 |
 | 极速安全 AX 模型 | 由 `极速安全` 提供扫描引擎，支持对 PE 文件的分析| 不开源 |
 | 基于云的扫描引擎 | 由 `MEMZUAC` 提供的云扫描服务 | 不开源 |
 | CzkCloud | 由 `天启星图网络科技` 提供的云扫描服务 | 不开源 |
 
 ::: tip 提示
- 因为需要保护 ApiKey 故在 Nightly 版中不支持 CzkCloud
+ 因为需要保护 ApiKey 故在 Beta 版中不支持 CzkCloud
 :::
 
 
@@ -83,7 +83,3 @@ Xdows Security 4.1 是一个基于 `WinUI3` + `C#` 技术构建的杀毒软件�
 git clone https://github.com/XTY64XTY12345/Xdows-Security
 ```
 3. 使用 VS 打开并进行生成
-
-> [!NOTE] 无法生成
-> 
-> 因为 SouXiao 提供方 `Mint` 不开源其相关内容，你可以移除相关内容或联系 `Mint` 获取相关内容

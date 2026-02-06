@@ -57,13 +57,13 @@ Download the required .NET version from the [official Microsoft website](https:/
 | Name | Description | Open Source |
 |------|-------------|-------------|
 | Xdows Local | Analyzes PE files using import tables, export tables, and other methods | Fully open source |
-| SouXiao | Scan engine provided by `Mint`, based on multiple analysis techniques | Closed source |
+| SouXiao | Scan engine provided by `Mint`, based on multiple analysis techniques | Partially open source |
 | Jisu Security AX Model | Scan engine provided by `Jisu Security`, supports PE file analysis | Closed source |
 | Cloud-based Scan Engine | Cloud scanning service provided by `MEMZUAC` | Closed source |
 | CzkCloud | Cloud scanning service provided by `Tianqi StarMap Network Technology` | Closed source |
 
 ::: tip Tip
-CzkCloud is not supported in the Nightly build in order to protect the API key.
+CzkCloud is not supported in the Beta build in order to protect the API key.
 :::
 
 ## Build & Run {#Build}
@@ -78,7 +78,3 @@ git clone https://github.com/XTY64XTY12345/Xdows-Security
 ````
 
 3. Open the project in Visual Studio and build it
-
-> [!NOTE] Build failure
->
-> Because the SouXiao provider `Mint` does not open-source its related components, you must remove those parts or contact `Mint` to obtain the required content.
