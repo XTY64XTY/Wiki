@@ -8,7 +8,7 @@ Xdows Security 4.1 is an antivirus software built using `WinUI 3` and `C#`.
 
 ## Download {#Download}
 
-<Linkcard url="https://github.com/XTY64XTY12345/Xdows-Security/releases" title="Download Xdows Security Beta" description="https://github.com/XTY64XTY12345/Xdows-Security/releases" logo="/logo.ico"/>
+<Linkcard url="https://github.com/LoveProgrammingMint/Xdows-Security/releases" title="Download Xdows Security Beta" description="https://github.com/LoveProgrammingMint/Xdows-Security/releases" logo="/logo.ico"/>
 
 ## FAQ {#Question}
 
@@ -73,7 +73,7 @@ CzkCloud is not supported in the Beta build in order to protect the API key.
     3. Git installed and able to access GitHub normally
 2. Clone the repository:
 ```sh
-git clone https://github.com/XTY64XTY12345/Xdows-Security
+git clone https://github.com/LoveProgrammingMint/Xdows-Security
 ````
 
 3. Open the project in Visual Studio and build it
