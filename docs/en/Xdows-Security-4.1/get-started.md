@@ -58,7 +58,6 @@ Download the required .NET version from the [official Microsoft website](https:/
 |------|-------------|-------------|
 | Xdows Local | Analyzes PE files using import tables, export tables, and other methods | Fully open source |
 | SouXiao | Scan engine provided by `Mint`, based on multiple analysis techniques | Partially open source |
-| Jisu Security AX Model | Scan engine provided by `Jisu Security`, supports PE file analysis | Closed source |
 | Cloud-based Scan Engine | Cloud scanning service provided by `MEMZUAC` | Closed source |
 | CzkCloud | Cloud scanning service provided by `Tianqi StarMap Network Technology` | Closed source |
 
