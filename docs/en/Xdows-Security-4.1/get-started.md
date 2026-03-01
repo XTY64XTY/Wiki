@@ -65,15 +65,30 @@ Download the required .NET version from the [official Microsoft website](https:/
 CzkCloud is not supported in the Beta build in order to protect the API key.
 :::
 
-## Build & Run {#Build}
+## Build and Run {#Build}
 
 1. Requirements:
-    1. Windows 10 / 11
-    2. Visual Studio 2022 or later with required workloads installed
-    3. Git installed and able to access GitHub normally
-2. Clone the repository:
-```sh
-git clone https://github.com/LoveProgrammingMint/Xdows-Security
-````
+    - Operating System: Windows 10/11
+    - Software: Git, Visual Studio 2026
+    - Network: Normal access to GitHub
+    - Workloads: Please open the solution to check
 
-3. Open the project in Visual Studio and build it
+2. Build and Run:
+
+    1. Clone the repository
+
+      ```sh
+      git clone https://github.com/LoveProgrammingMint/Xdows-Security   
+      git clone https://github.com/LoveProgrammingMint/SouXiaoAVEngine   
+      git clone https://github.com/LoveProgrammingMint/ICEX   
+      ```
+
+    1. Build the project
+
+      Simply build the `Xdows-Security.slnx` solution
+
+      Or use the Publish feature to enable AOT compilation
+
+## License {#License}
+
+This project is licensed under the AGPL-3.0 License. See [LICENSE](https://github.com/LoveProgrammingMint/Xdows-Security/blob/master/LICENSE.txt) for details.
