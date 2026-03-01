@@ -1,4 +1,4 @@
-# Quick Start {#GetStarted}
+# Getting Started {#GetStarted}
 
 Take a look at the next-generation antivirus software built with `WinUI 3` + `C#`.
 
