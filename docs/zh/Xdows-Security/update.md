@@ -1,3 +1,7 @@
+::: warning 注意
+该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh/Xdows-Security-4.1/get-started) 版本。
+:::
+
 # 更新日志
 
 下面是仅记录要点，查看版本更新请去 [这里][Pro]

@@ -1,3 +1,7 @@
+::: warning 注意
+该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh/Xdows-Security-4.1/get-started) 版本。
+:::
+
 # Main.dll
 
 ## 简介

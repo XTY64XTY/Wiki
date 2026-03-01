@@ -172,9 +172,7 @@ export default withMermaid({
           items: [
             { text: 'Getting Started', link: '/en/Xdows-Security-4.1/get-started' },
             { text: 'Changelog', link: '/en/Xdows-Security-4.1/update' },
-            { text: 'Scan Logic', link: '/en/Xdows-Security-4.1/Scan-Logic' },
-            { text: 'Log System', link: '/en/Xdows-Security-4.1/Log-System' },
-
+            { text: 'Xdows Tools', link: '/en/Xdows-Security-4.1/Xdows-Tools/get-started' },
           ]
         },
         {
@@ -215,23 +213,7 @@ export default withMermaid({
           items: [
             { text: '快速开始', link: '/zh/Xdows-Security-4.1/get-started' },
             { text: '更新日志', link: '/zh/Xdows-Security-4.1/update' },
-            { text: '扫描逻辑', link: '/zh/Xdows-Security-4.1/Scan-Logic' },
-            {
-              text: 'Xdows Tools',
-              collapsed: false,
-              items: [
-                  { text: '快速开始', link: '/zh/Xdows-Security-4.1/Xdows-Tools/get-started.md' },
-                  {
-                    text: '插件系统',
-                    collapsed: false,
-                    items: [
-                            { text: '快速开始', link: '/zh/Xdows-Security-4.1/Xdows-Tools/Plugins/get-started.md' },
-                            { text: '插件信息', link: '/zh/Xdows-Security-4.1/Xdows-Tools/Plugins/information.md' },
-                    ]
-                  },
-                ]
-              },
-            { text: '日志系统', link: '/zh/Xdows-Security-4.1/Log-System' },
+            { text: 'Xdows Tools', link: '/zh/Xdows-Security-4.1/Xdows-Tools/get-started' },
           ]
         },
         {

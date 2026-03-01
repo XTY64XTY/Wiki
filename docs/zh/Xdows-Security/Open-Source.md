@@ -1,3 +1,7 @@
+::: warning 注意
+该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh/Xdows-Security-4.1/get-started) 版本。
+:::
+
 # 开源说明
 ## Xdows Security 本身
 Xdows Security 本身的源代码是基于 MIT 协议开源的，但其资源（图片等）、脚本等需要经过允许才能使用。

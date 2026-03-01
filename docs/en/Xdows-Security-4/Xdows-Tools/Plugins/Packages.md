@@ -1,3 +1,7 @@
+::: warning NOTICE
+This version is outdated. It is recommended to view the latest [Xdows Security 4.1](/en/Xdows-Security-4.1/get-started) version.
+:::
+
 # Creating Plugin Packages
 
 ## Compression Software
