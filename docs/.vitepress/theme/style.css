@@ -42,7 +42,7 @@
  * - `danger`: Used to show error, or dangerous message to the users. Used
  *   in custom container, badges, etc.
  * -------------------------------------------------------------------------- */
-html[class = 'dark']{
+html.dark{
   --vp-c-brand-1:  #65cafc;
   --vp-c-brand-2:  #5ac7fd;
   --vp-c-brand-3:  #4CC2FF;
@@ -215,7 +215,7 @@ p.trans-title::before,p.title::before {
 .details.custom-block{
   background-color: var(--vp-c-default-3)!important;
 }
-html[class = 'dark'] .DocSearch-Button,html[class = 'dark'] .VPFeature,.VPButton:not(.brand),.search-bar, kbd{
+html.dark .DocSearch-Button,html.dark .VPFeature,.VPButton:not(.brand),.search-bar, kbd{
   background-color: var(--vp-c-default-3)!important;
 }
 .VPLink.link.vp-external-link-icon.no-icon:hover{

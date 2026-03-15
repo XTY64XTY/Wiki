@@ -8,7 +8,7 @@
     "@nolebase/vitepress-plugin-enhanced-readabilities": "*",
     "markdown-it-task-checkbox": "*",
     "medium-zoom": "*",
-    "vitepress": "^1.6.3",
+    "vitepress": "^2.0.0-alpha.16",
     "vitepress-markdown-timeline": "*",
     "vitepress-plugin-comment-with-giscus": "*",
     "vitepress-plugin-mermaid": "^2.0.17"
