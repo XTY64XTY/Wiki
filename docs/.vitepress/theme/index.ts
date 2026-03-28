@@ -23,11 +23,20 @@ import "vitepress-markdown-timeline/dist/theme/index.css";
 let NProgress: any = null
 let nprogressCss: HTMLStyleElement | null = null
 
-if (typeof window !== 'undefined') {
-  NProgress = (await import('nprogress-v2/dist/index.js')).NProgress
-  nprogressCss = document.createElement('style')
-  nprogressCss.textContent = await (await fetch('nprogress-v2/dist/index.css')).text()
-  document.head.appendChild(nprogressCss)
+async function loadNProgress() {
+  if (typeof window !== 'undefined') {
+    const { NProgress: nprogress } = await import('nprogress-v2/dist/index.js')
+    NProgress = nprogress
+    
+    // 加载样式
+    nprogressCss = document.createElement('style')
+    const response = await fetch('/node_modules/nprogress-v2/dist/index.css')
+    nprogressCss.textContent = await response.text()
+    document.head.appendChild(nprogressCss)
+    
+    return NProgress
+  }
+  return null
 }
 
 import {NolebaseEnhancedReadabilitiesMenu,NolebaseEnhancedReadabilitiesScreenMenu,} from '@nolebase/vitepress-plugin-enhanced-readabilities/client'
@@ -47,15 +56,18 @@ export default {
   enhanceApp({ app , router }) {
     // 注册全局组件
     app.component('Linkcard', Linkcard); // 链接卡片
-    
-    if (NProgress) {
-      NProgress.configure({ showSpinner: false })
-      router.onBeforeRouteChange = () => {
-        NProgress.start() // 开始进度条
-      }
-      router.onAfterRouteChange = () => {
-         NProgress.done() // 停止进度条
-       }
+        if (typeof window !== 'undefined') {
+      loadNProgress().then((nprogress) => {
+        if (nprogress) {
+          nprogress.configure({ showSpinner: false })
+          router.onBeforeRouteChange = () => {
+            nprogress.start() // 开始进度条
+          }
+          router.onAfterRouteChange = () => {
+            nprogress.done() // 停止进度条
+          }
+        }
+      })
     }
   },
 
