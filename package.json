@@ -10,11 +10,9 @@
     "medium-zoom": "*",
     "vitepress": "^2.0.0-alpha.16",
     "vitepress-markdown-timeline": "*",
-    "vitepress-plugin-comment-with-giscus": "*",
-    "vitepress-plugin-mermaid": "^2.0.17"
+    "vitepress-plugin-comment-with-giscus": "*"
   },
   "dependencies": {
-    "mermaid": "^11.12.0",
     "nprogress-v2": "^1.1.10"
   }
 }

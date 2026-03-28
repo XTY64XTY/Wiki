@@ -1,15 +1,9 @@
 import { defineConfig } from 'vitepress'
 import timeline from "vitepress-markdown-timeline"; 
 import taskLists from 'markdown-it-task-checkbox'
-import { withMermaid } from 'vitepress-plugin-mermaid'
 // https://vitepress.dev/reference/site-config
 
-export default withMermaid({
-  mermaid: {
-    mermaidPlugin: {
-      class: "mermaid my-class", // set additional css classes for parent container 
-    },
-  },
+export default defineConfig({
   title: "Xdows Software",
   description: "Xdows Software",
   head: [
