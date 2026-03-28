@@ -8,11 +8,11 @@
     "@nolebase/vitepress-plugin-enhanced-readabilities": "*",
     "markdown-it-task-checkbox": "*",
     "medium-zoom": "*",
-    "vitepress": "^2.0.0-alpha.16",
+    "vitepress": "^*",
     "vitepress-markdown-timeline": "*",
     "vitepress-plugin-comment-with-giscus": "*"
   },
   "dependencies": {
-    "nprogress-v2": "^1.1.10"
+    "nprogress-v2": "*"
   }
 }
