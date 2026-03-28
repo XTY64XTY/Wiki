@@ -120,12 +120,12 @@ export default withMermaid({
       themeConfig:{
         nav: [
           { 
-            text: 'Home',
+            text: '主頁',
             link: '/zh-HANT/',
           },
           { 
-            text: 'Getting Started',
-            link: '/en-US/Xdows-Security-4.1/get-started.md',
+            text: '快速開始',
+            link: '/zh-HANT/Xdows-Security-4.1/get-started.md',
           },
         ],
         footer: {
@@ -353,40 +353,40 @@ export default withMermaid({
           text: 'Xdows Security 4.1',
           collapsed: false,
           items: [
-            { text: 'Getting Started', link: '/en-US/Xdows-Security-4.1/get-started' },
-            { text: 'Changelog', link: '/en-US/Xdows-Security-4.1/update' },
-            { text: 'Xdows Tools', link: '/en-US/Xdows-Security-4.1/Xdows-Tools/get-started' },
+            { text: '快速開始', link: '/zh-HANT/Xdows-Security-4.1/get-started' },
+            { text: '更新日誌', link: '/zh-HANT/Xdows-Security-4.1/update' },
+            { text: 'Xdows Tools', link: '/zh-HANT/Xdows-Security-4.1/Xdows-Tools/get-started' },
           ]
         },
         {
           text: 'Xdows Security 4.0',
           collapsed: true,
           items: [
-            { text: 'Getting Started', link: '/en-US/Xdows-Security-4/get-started' },
+            { text: '快速開始', link: '/zh-HANT/Xdows-Security-4/get-started' },
                         {
-              text: 'Client',
+              text: '客戶端',
               collapsed: true,
               items: [
-                  { text: 'Windows', link: '/en-US/Xdows-Security-4/Client/Windows.md' },
+                  { text: 'Windows', link: '/zh-HANT/Xdows-Security-4/Client/Windows.md' },
                 ]
             },
             {
             text: 'Xdows Tools',
             collapsed: false,
             items: [
-                { text: 'Getting Started', link: '/en-US/Xdows-Security-4/Xdows-Tools/get-started.md' },
+                { text: '快速開始', link: '/zh-HANT/Xdows-Security-4/Xdows-Tools/get-started.md' },
                 {
-                  text: 'Plugins',
+                  text: '外掛',
                   collapsed: false,
                   items: [
-                          { text: 'Getting Started', link: '/en-US/Xdows-Security-4/Xdows-Tools/Plugins/get-started.md' },
-                          { text: 'Making Packages', link: '/en-US/Xdows-Security-4/Xdows-Tools/Plugins/Packages.md' },
-                          { text: 'Main.dll', link: '/en-US/Xdows-Security-4/Xdows-Tools/Plugins/Main.dll.md' },
+                          { text: '快速開始', link: '/zh-HANT/Xdows-Security-4/Xdows-Tools/Plugins/get-started.md' },
+                          { text: '建立外掛套件', link: '/zh-HANT/Xdows-Security-4/Xdows-Tools/Plugins/Packages.md' },
+                          { text: 'Main.dll', link: '/zh-HANT/Xdows-Security-4/Xdows-Tools/Plugins/Main.dll.md' },
                   ]
                 },
               ]
             },
-            { text: 'Changelog', link: '/en-US/Xdows-Security-4/update' },
+            { text: '更新日誌', link: '/zh-HANT/Xdows-Security-4/update' },
           ]
         },
       ],
