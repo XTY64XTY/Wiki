@@ -1,5 +1,5 @@
 ::: warning 注意
-该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh/Xdows-Security-4.1/get-started) 版本。
+该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh-HANS/Xdows-Security-4.1/get-started) 版本。
 :::
 
 # 杀毒功能
@@ -26,4 +26,4 @@
 
 没什么技术含量，就不细讲了😊
 
-[scan]:/zh/Xdows-Security/settings-feature.html#功能设置
+[scan]:/zh-HANS/Xdows-Security/settings-feature.html#功能设置

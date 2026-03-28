@@ -1,5 +1,5 @@
 ::: warning 注意
-该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh/Xdows-Security-4.1/get-started) 版本。
+该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh-HANS/Xdows-Security-4.1/get-started) 版本。
 :::
 
 # 更新日志
@@ -9,10 +9,10 @@
 ::: timeline 4.00-Beta7
 - 页面：
     - 删除不需要的代码
-    - 点击设置按钮增加旋转动画![Update-Beta7-ColorDialog](/zh/Xdows-Security-4/PNG/Update-Beta7-SettingsButtonAnimation.gif)效果图
+    - 点击设置按钮增加旋转动画![Update-Beta7-ColorDialog](/zh-HANS/Xdows-Security-4/PNG/Update-Beta7-SettingsButtonAnimation.gif)效果图
 - 设置：
     - 增加 `常见问题` 页面
-    - 增加 `配色管理` 功能![Update-Beta7-ColorDialog](/zh/Xdows-Security-4/PNG/Update-Beta7-ColorDialog.png)效果图
+    - 增加 `配色管理` 功能![Update-Beta7-ColorDialog](/zh-HANS/Xdows-Security-4/PNG/Update-Beta7-ColorDialog.png)效果图
 - 客户端：初始功能
 - Xdows UI：
     - 增加手机版UI
@@ -44,7 +44,7 @@
     - 组件支持深色模式
     - 添加 `信息框` 组件
     - 添加 `选择框` 组件
-    - 增加 `菜单` 组件背景亚克力效果![Update-Beta6-Menu](/zh/Xdows-Security-4/PNG/Update-Beta6-Menu.png)效果图
+    - 增加 `菜单` 组件背景亚克力效果![Update-Beta6-Menu](/zh-HANS/Xdows-Security-4/PNG/Update-Beta6-Menu.png)效果图
     - 增加部分组件的禁用样式
     - 优化 `滑动按钮` 组件动画
     - 修改 `按钮` `侧边栏` `列表` `选择夹` 组件样式

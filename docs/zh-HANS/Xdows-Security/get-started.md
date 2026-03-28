@@ -1,5 +1,5 @@
 ::: warning 注意
-该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh/Xdows-Security-4.1/get-started) 版本。
+该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh-HANS/Xdows-Security-4.1/get-started) 版本。
 :::
 
 # 快速开始
@@ -7,7 +7,7 @@
 ::: tip
 Xdows Security 4.0 开始制作，该版本**进入维护阶段**
 
-[查看进度](/zh/Xdows-Security-4/get-started.html)
+[查看进度](/zh-HANS/Xdows-Security-4/get-started.html)
 :::
 
 ::: danger 危险
@@ -67,5 +67,5 @@ Xdows Security 现已全部开源，具体开源地址如下：
 如果还有组件没开源请联系我们进行开源
 
 
-[help]: /zh/Xdows-Security/help
-[sys]: /zh/Xdows-Security/system
+[help]: /zh-HANS/Xdows-Security/help
+[sys]: /zh-HANS/Xdows-Security/system
