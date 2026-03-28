@@ -4,7 +4,6 @@
 
 # Windows 用戶端
 
-![Windows 用戶端](./../PNG/Client-Windows.png)
 
 ## 簡介 {#Info}
 從 `Xdows Security 4.0 Beta-7` 開始添加了 `Windows` 平台的用戶端
