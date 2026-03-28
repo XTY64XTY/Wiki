@@ -1,3 +1,6 @@
+> [!NOTE] 通知
+> Xdows Security 正在成为 IceZero AntiVirus
+
 # 快速开始 {#GetStarted}
 
 来看看下一代基于 `WinUI3` + `C#` 技术构建的杀毒软件

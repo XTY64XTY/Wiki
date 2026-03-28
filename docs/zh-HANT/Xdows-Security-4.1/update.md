@@ -1,3 +1,6 @@
+> [!NOTE] 通知
+> Xdows Security 正在成為 IceZero AntiVirus
+
 # 更新日誌
 
-更新日誌已移至 [GitHub](https://github.com/)。請點擊下方 [連結](https://github.com/XTY64XTY12345/Xdows-Security/commits/master/) 查看最近的提交和發布說明
+更新日誌現已移至 [GitHub](https://github.com/)。請點擊 [這個連結](https://github.com/XTY64XTY12345/Xdows-Security/commits/master/) 查看。

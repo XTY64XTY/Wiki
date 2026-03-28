@@ -1,5 +1,5 @@
 ::: warning 注意
-此版本已過期。建議查看最新的 [Xdows Security 4.1](/zh-HANT/Xdows-Security-4.1/get-started) 版本。
+該版本已過時。建議查看最新的 [Xdows Security 4.1](/zh-HANT/Xdows-Security-4.1/get-started) 版本。
 :::
 
 # Xdows Tools
@@ -8,12 +8,12 @@
 
 （圖片僅供參考）
 
-## 介紹
+## 簡介
 
-Xdows Tools 是 Xdows Security 的內建工具組。
+Xdows Tools 是 Xdows Security 內置的工具集
 
-與 3.0 版本相比，Xdows Security 4.0 中的 Xdows Tools 具有重新設計的 UI 並支援外掛匯入。
+Xdows Security 4.0 的 Xdows Tools 相比 3.0 在重新繪製 UI 的同時支援了 匯入外掛 功能
 
 ## 外掛
 
-[請看這裡](./Plugins/get-started.md)
+[請查看這裡](./Plugins/get-started.md)

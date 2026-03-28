@@ -199,7 +199,7 @@ p.trans-title::before,p.title::before {
   margin-bottom: 4px;
 }
 .copy,.VPButton, .DocSearch-Button,.details.custom-block,
-.VPLink.link.pager-link, .search-bar, kbd, .nolebase-ui-input-horizontal-option.active{
+.VPLink.link.pager-link, .search-bar, span.keys{
   border-radius: 4px!important;
   font-weight:520!important;
   box-shadow: 0 0 0 0 var(--vp-button-brand-border)!important;
@@ -215,7 +215,7 @@ p.trans-title::before,p.title::before {
 .details.custom-block{
   background-color: var(--vp-c-default-3)!important;
 }
-html.dark .DocSearch-Button,html.dark .VPFeature,.VPButton:not(.brand),.search-bar, kbd{
+html.dark .DocSearch-Button,html.dark .VPFeature,.VPButton:not(.brand),.search-bar, span.keys{
   background-color: var(--vp-c-default-3)!important;
 }
 .VPLink.link.vp-external-link-icon.no-icon:hover{

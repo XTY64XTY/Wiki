@@ -1,47 +1,48 @@
 ::: warning 注意
-此版本已過期。建議查看最新的 [Xdows Security 4.1](/zh-HANT/Xdows-Security-4.1/get-started) 版本。
+該版本已過時。建議查看最新的 [Xdows Security 4.1](/zh-HANT/Xdows-Security-4.1/get-started) 版本。
 :::
 
 # Main.dll
 
-## 介紹
+## 簡介
 
-Main.dll 是 Xdows Tools 實際呼叫的 DLL。
+Main.dll 為 Xdows Tools 實際呼叫的DLL
 
-Xdows Tools 使用此 DLL 來實現外掛功能。
+Xdows Tools 通過呼叫這個DLL來實現外掛功能
 
-Main.dll 通常位於 `PluginName\Files\Main.dll`。
+Main.dll 通常是在 `外掛名\Files\Main.dll` 文件
 
 ## 注意
 
-編譯 DLL 時，嘗試選擇 Xdows Security 的目標架構（通常是 x86）。
+在編譯DLL時盡量選擇目標 Xdows Security 的架構（一般為 x86 架構）
 
-不同的架構可能會導致**效能緩慢**或**當機**問題。
+不同的架構可能會導致執行**效率慢**或**崩潰**問題
 
 > [!IMPORTANT] 重要
-> 以下函數必須存在於 DLL 中。
-> 
-> 如果它們不存在，程式將會當機。
+> 以下DLL程式中的必須存在
+>
+> 如果不存在，程式將會崩潰
+
 
 ## SetUIHtml
 
-|    名稱    | 傳回類型 | 說明                                      |
-| :--------- | :-------- | :--------------------------------------- |
-| SetUIHtml  |   文字     | 此函數在 Xdows Tools 中載入 Html 檔案。 |
+|    名稱   |  返回類型 |注明                                    |
+| :-------- | :------- | :-------------------------------------- |
+| SetUIHtml |   文字   |該函數定義在 Xdows Tools 中載入的 Html 文件|
 
-此函數沒有參數。如果提供了參數，程式將會當機。
+該函數沒有參數，如有參數則程式崩潰
 
 ::: code-group
 
 ```cpp[C++]
-// 由 DeepSeek 翻譯，可能需要修改。
+// 由 DeepSeek 翻譯，可能需要進行修改
 
 #include <string>
 #include <fstream>
 #include <filesystem>
 
 std::string SetUIHtml() {
-    // 將 "Name" 取代為外掛名稱，將 "HtmlFiles" 取代為要顯示的 Html 檔案名稱。
+    // 請把 "Name" 替換為外掛名，把 "HtmlFiles" 替換為需要顯示的 Html 文件名
     using namespace std::filesystem;
     auto path = current_path() / "Plugins\\Name\\Files\\HtmlFiles.html";
     return std::string(std::istreambuf_iterator<char>(std::ifstream(path).rdbuf()),
@@ -50,17 +51,17 @@ std::string SetUIHtml() {
 ```
 
 ```c[C]
-// 由 DeepSeek 翻譯，可能需要修改。
+// 由 DeepSeek 翻譯，可能需要進行修改
 
 #include <windows.h>
 #include <stdio.h>
 
 char* SetUIHtml() {
-    // 將 "Name" 取代為外掛名稱，將 "HtmlFiles" 取代為要顯示的 Html 檔案名稱。
+    // 請把 "Name" 替換為外掛名，把 "HtmlFiles" 替換為需要顯示的 Html 文件名
     char path[MAX_PATH];
-    sprintf(path, "%s\\Plugins\\Name\\Files\\HtmlFiles.html", 
-            GetModuleHandle(NULL) ? "" : ""); // 取得目前目錄的聰明方法
-    
+    sprintf(path, "%s\\Plugins\\Name\\Files\\HtmlFiles.html",
+            GetModuleHandle(NULL) ? "" : ""); // 獲取當前目錄的巧妙方式
+
     HANDLE hFile = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, NULL,
                               OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile == INVALID_HANDLE_VALUE) return NULL;
@@ -73,147 +74,183 @@ char* SetUIHtml() {
     return buf;
 }
 
-/* 使用後使用 free() 釋放記憶體 */
+/* 使用後需 free() 釋放記憶體 */
 ```
 
 ```py[Python]
-# 由 DeepSeek 翻譯，可能需要修改。
+# 由 DeepSeek 翻譯，可能需要進行修改
 
 import os
 
 def set_ui_html() -> str:
-    # 將 "Name" 取代為外掛名稱，將 "HtmlFiles" 取代為要顯示的 Html 檔案名稱，並將 "utf-8" 取代為檔案編碼。
+    # 請把 "Name" 替換為外掛名，把 "HtmlFiles" 替換為需要顯示的 Html 文件名，把 "utf-8" 替換為文件編碼
     file_path = os.path.join(os.getcwd(), "Plugins", "Name", "Files", "HtmlFiles.html")
     with open(file_path, 'r', encoding='utf-8') as f:
         return f.read()
 ```
 
-```pseudo[虛擬碼]
-// 範例虛擬碼，可能需要根據實際需求進行調整。
+```EPL[易語言]
+.版本 2
 
-Function SetUIHtml Returns Text
-    Define FilePath = CurrentDirectory + "\Plugins\Name\Files\HtmlFiles.html"
-    Open FilePath As ReadOnly
-    If FileExists
-        Return ReadFileContent
-    Else
-        Return EmptyText
-    End If
-End Function
+.子程序 SetUIHtml, 文字型, 公開
+
+' 請把 "Name" 替換為外掛名，把 "HtmlFiles" 替換為需要顯示的 Html 文件名
+返回 (到文字 (讀入文件 (取運行目錄 () ＋ "\Plugins\Name\Files\HtmlFiles.html")))
+```
+
+```pseudo[偽代碼]
+// 示例偽代碼，可能需要根據實際需求調整
+
+函數 SetUIHtml 返回 文字型
+    定義 文件路徑 = 目前目錄 + "\Plugins\Name\Files\HtmlFiles.html"
+    打開 文件路徑 為 唯讀
+    如果 文件存在
+        返回 讀取文件內容
+    否則
+        返回 空文字
+    結束
+結束函數
 ```
 
 :::
+
+
 
 ## SetUITitle
 
 
-|    名稱     | 傳回類型 | 說明                                  |
-| :---------- | :-------- | :----------------------------------- |
-| SetUITitle  |   文字     | 此函數設定在 Xdows Tools 中顯示的標題。 |
+|    名稱    |  返回類型 |注明                               |
+| :--------- | :-------- | :-------------------------------- |
+| SetUITitle |    文字   |該函數定義在 Xdows Tools 中顯示的標題|
 
-此函數沒有參數。
+該函數沒有參數
 
 ::: code-group
 
 ```c[C++/C]
-// 由 DeepSeek 翻譯，可能需要修改。
+// 由 DeepSeek 翻譯，可能需要進行修改
 
 const char* SetUITitle() {
-    return "PluginsTitle";
+ return "PluginsTitle";
 }
+
 ```
 
 ```py[Python]
-# 由 DeepSeek 翻譯，可能需要修改。
+# 由 DeepSeek 翻譯，可能需要進行修改
 
 def SetUITitle():
-    return "PluginsTitle"
+ return "PluginsTitle"
+
 ```
 
+```EPL[易語言]
+.版本 2
 
-```pseudo[虛擬碼]
-// 範例虛擬碼，可能需要根據實際需求進行調整。
+.子程序 SetUITitle, 文字型, 公開
 
-Function SetUITitle Returns Text
-    Return "PluginsTitle"
-End Function
+返回 (“PluginsTitle”)
+
+```
+
+```pseudo[偽代碼]
+// 示例偽代碼，可能需要根據實際需求調整
+
+函數 SetUITitle 返回 文字型
+    返回 "PluginsTitle"
+結束函數
 ```
 
 :::
+
+
 
 ## GetInfo
 
 
-|    名稱    | 傳回類型 | 說明                                  |
-| :--------- | :-------- | :----------------------------------- |
-| GetInfo    |   文字     | 此函數在 Xdows Tools 首頁上顯示說明。 |
+|    名稱   |  返回類型 |注明                                                    |
+| :-------- | :------- | :------------------------------------------------------ |
+| GetInfo   |    文字  |該函數定義在 Xdows Tools 功能主頁 顯示的簡介|
 
-此函數沒有參數。如果提供了參數，程式將會當機。
+該函數沒有參數，如有參數則程式崩潰
 
 ::: code-group
 
 ```c[C++/C]
-// 由 DeepSeek 翻譯，可能需要修改。
+// 由 DeepSeek 翻譯，可能需要進行修改
 
 const char* GetInfo() {
-    return "PluginsInfo";
+ return "PluginsInfo";
 }
+
 ```
 
 ```py[Python]
-# 由 DeepSeek 翻譯，可能需要修改。
+# 由 DeepSeek 翻譯，可能需要進行修改
 
 def GetInfo():
-    return "PluginsInfo"
+ return "PluginsInfo"
+
 ```
 
+```EPL[易語言]
+.版本 2
 
-```pseudo[虛擬碼]
-// 範例虛擬碼，可能需要根據實際需求進行調整。
+.子程序 GetInfo, 文字型, 公開
 
-Function GetInfo Returns Text
-    Return "PluginsInfo"
-End Function
+返回 (“PluginsInfo”)
+
+```
+
+```pseudo[偽代碼]
+// 示例偽代碼，可能需要根據實際需求調整
+
+函數 GetInfo 返回 文字型
+    返回 "PluginsInfo"
+結束函數
 ```
 
 :::
 
+
+
 ## ScanFiles
 
 > [!IMPORTANT] 重要
-> 此函數將在未來版本中啟用。
-> 
-> 為了確保與新版本的相容性，建議實作它。
+> 該函數將在之後啟用
+>
+> 為保證相容新版本，建議編寫
 
-|    名稱     | 傳回類型 | 說明                                  |
-| :---------- | :-------- | :----------------------------------- |
-| ScanFiles   |   文字     | 此函數新增一個額外的引擎來掃描檔案。 |
+|    名稱    |  返回類型 |注明                               |
+| :--------- | :-------- | :-------------------------------- |
+| ScanFiles  |    文字   |該函數用於在掃描文件時外掛添加的額外引擎|
 
-如果未偵測到病毒或忽略此功能，請傳回空字串。
+如果未檢測到病毒或選擇忽略此功能請返回空文字
 
-如果偵測到病毒，請傳回病毒名稱。
+如果檢測到病毒請返回病毒名稱
 
-此函數的參數如下：
+該函數的參數如下
 
-| 名稱 | 類型 | 說明                                  |
+| 名稱 |  類型 |注明|
 | :--- | :--- | :----------------------------------- |
-| Path | 文字 | 要掃描的檔案名稱。不能為空。 |
+| Path | 文字 |預掃描的文件名稱。不可空，無需處理相關問題|
 
-## 在 Html 檔案中呼叫
+## Html檔案內呼叫
 
-您可以使用 HTTP 請求來呼叫 DLL。
+你可以使用 Http 訪問來呼叫DLL
 
-```js
+``` js
 const Http = new XMLHttpRequest();
-Http.open("GET", '/Function/PluginName-FunctionName/?Param1=Value1&Param2=Value2', false);
+Http.open("GET", '/Function/外掛名-調用函數/?參數1=參數內容&參數2=參數內容',false);
 Http.send();
+
 ```
 
 > [!IMPORTANT] 重要
-> 最多允許 2 個參數。
+> 參數最多只能有 2 個
 >
-> 多餘的參數將被忽略。
-> 
-> DLL 函數的傳回值必須是文字類型（如果不需要，可以傳回空字串）。參數也必須是文字類型。
+> 多餘參數將會被忽略
 >
-> 其他類型將導致當機。
+> 呼叫的DLL函數返回值必須為 文字 型（不需要可返回空文字），參數必須為 文字 型
+>
+> 其它類型將會崩潰
