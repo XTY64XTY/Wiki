@@ -1,2 +1,2 @@
 ## Loading...
-<meta http-equiv="refresh" content="0;url=./en/"> 
+<meta http-equiv="refresh" content="0;url=./en-US/"> 
