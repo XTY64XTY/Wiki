@@ -15,13 +15,20 @@ import giscusTalk from 'vitepress-plugin-comment-with-giscus';
 import { useData, useRoute } from 'vitepress';
 // 图片放大
 import mediumZoom from 'medium-zoom';
-import { onMounted, watch, nextTick } from 'vue';
+import { onMounted, watch, nextTick, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vitepress';
 // 时间线
 import "vitepress-markdown-timeline/dist/theme/index.css";
 
-import { NProgress } from 'nprogress-v2/dist/index.js' // 进度条组件
-import 'nprogress-v2/dist/index.css' // 进度条样式
+let NProgress: any = null
+let nprogressCss: HTMLStyleElement | null = null
+
+if (typeof window !== 'undefined') {
+  NProgress = (await import('nprogress-v2/dist/index.js')).NProgress
+  nprogressCss = document.createElement('style')
+  nprogressCss.textContent = await (await fetch('nprogress-v2/dist/index.css')).text()
+  document.head.appendChild(nprogressCss)
+}
 
 import {NolebaseEnhancedReadabilitiesMenu,NolebaseEnhancedReadabilitiesScreenMenu,} from '@nolebase/vitepress-plugin-enhanced-readabilities/client'
 
@@ -40,13 +47,16 @@ export default {
   enhanceApp({ app , router }) {
     // 注册全局组件
     app.component('Linkcard', Linkcard); // 链接卡片
-          NProgress.configure({ showSpinner: false })
+    
+    if (NProgress) {
+      NProgress.configure({ showSpinner: false })
       router.onBeforeRouteChange = () => {
         NProgress.start() // 开始进度条
       }
       router.onAfterRouteChange = () => {
          NProgress.done() // 停止进度条
        }
+    }
   },
 
   setup() {
@@ -82,5 +92,11 @@ export default {
       //您可以使用“comment:true”序言在页面上单独启用它
       true
     );
+    
+    onBeforeUnmount(() => {
+      if (nprogressCss && nprogressCss.parentNode) {
+        nprogressCss.parentNode.removeChild(nprogressCss)
+      }
+    });
  }
 }
