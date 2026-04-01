@@ -81,9 +81,10 @@ CzkCloud is not supported in the Beta build in order to protect the API key.
     1. Clone the repository
 
       ```sh
-      git clone https://github.com/LoveProgrammingMint/Xdows-Security   
-      git clone https://github.com/LoveProgrammingMint/SouXiaoAVEngine   
-      git clone https://github.com/LoveProgrammingMint/ICEX   
+      git clone https://github.com/LoveProgrammingMint/Xdows-Security
+      git clone https://github.com/LoveProgrammingMint/SouXiaoAVEngine
+      git clone https://github.com/LoveProgrammingMint/ICEX
+      git clone https://github.com/XTY64XTY/Xdows-Model
       ```
 
     1. Build the project

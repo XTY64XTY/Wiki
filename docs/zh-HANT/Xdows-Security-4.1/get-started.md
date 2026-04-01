@@ -84,6 +84,7 @@ Xdows Security 4.1 是一個基於 `WinUI3` + `C#` 技術構建的防毒軟體�
       git clone https://github.com/LoveProgrammingMint/Xdows-Security
       git clone https://github.com/LoveProgrammingMint/SouXiaoAVEngine
       git clone https://github.com/LoveProgrammingMint/ICEX
+      git clone https://github.com/XTY64XTY/Xdows-Model
       ```
 
     1. 產生項目
