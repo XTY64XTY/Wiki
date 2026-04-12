@@ -94,11 +94,11 @@ def set_ui_html() -> str:
 
 .子程序 SetUIHtml, 文本型, 公开
 
-‘ 请把 “Name” 替换为插件名，把 “HtmlFiles” 替换为需要显示的 Html 文件名
-返回 (到文本 (读入文件 (取运行目录 () ＋ “\Plugins\Name\Files\HtmlFiles.html”)))
+' 请把 "Name" 替换为插件名，把 "HtmlFiles" 替换为需要显示的 Html 文件名
+返回 (到文本 (读入文件 (取运行目录 () ＋ "\Plugins\Name\Files\HtmlFiles.html")))
 ```
 
-```pseudo[伪代码]
+```txt
 // 示例伪代码，可能需要根据实际需求调整
 
 函数 SetUIHtml 返回 文本型
@@ -153,7 +153,7 @@ def SetUITitle():
 
 ```
 
-```pseudo[伪代码]
+```txt
 // 示例伪代码，可能需要根据实际需求调整
 
 函数 SetUITitle 返回 文本型
@@ -202,7 +202,7 @@ def GetInfo():
 
 ```
 
-```pseudo[伪代码]
+```txt
 // 示例伪代码，可能需要根据实际需求调整
 
 函数 GetInfo 返回 文本型

@@ -98,7 +98,7 @@ def set_ui_html() -> str:
 返回 (到文字 (讀入文件 (取運行目錄 () ＋ "\Plugins\Name\Files\HtmlFiles.html")))
 ```
 
-```pseudo[偽代碼]
+```txt
 // 示例偽代碼，可能需要根據實際需求調整
 
 函數 SetUIHtml 返回 文字型
@@ -144,17 +144,8 @@ def SetUITitle():
 
 ```
 
-```EPL[易語言]
-.版本 2
-
-.子程序 SetUITitle, 文字型, 公開
-
-返回 (“PluginsTitle”)
-
-```
-
-```pseudo[偽代碼]
-// 示例偽代碼，可能需要根據實際需求調整
+```txt
+// 示例偽代碼，可能需要根據實際需求進行調整。
 
 函數 SetUITitle 返回 文字型
     返回 "PluginsTitle"
@@ -193,17 +184,17 @@ def GetInfo():
 
 ```
 
-```EPL[易語言]
+```txt
 .版本 2
 
 .子程序 GetInfo, 文字型, 公開
 
-返回 (“PluginsInfo”)
+返回 ("PluginsInfo")
 
 ```
 
-```pseudo[偽代碼]
-// 示例偽代碼，可能需要根據實際需求調整
+```txt
+// 示例偽代碼，可能需要根據實際需求進行調整。
 
 函數 GetInfo 返回 文字型
     返回 "PluginsInfo"

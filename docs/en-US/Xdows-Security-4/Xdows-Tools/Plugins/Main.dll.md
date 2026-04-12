@@ -88,7 +88,7 @@ def set_ui_html() -> str:
         return f.read()
 ```
 
-```pseudo[Pseudocode]
+```txt
 // Example pseudocode, may need adjustments based on actual requirements.
 
 Function SetUIHtml Returns Text
@@ -167,8 +167,7 @@ def GetInfo():
     return "PluginsInfo"
 ```
 
-
-```pseudo[Pseudocode]
+```txt
 // Example pseudocode, may need adjustments based on actual requirements.
 
 Function GetInfo Returns Text
