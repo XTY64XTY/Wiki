@@ -9,14 +9,22 @@ hero:
   image: /logo.ico
   actions:
     - theme: brand
-      text: 快速开始 (4.1)
-      link: ./Xdows-Security-4.1/get-started.md
+      text: 快速开始
+      link: ./Xdows-Security-5/get-started.md
     - theme: alt
       text: 立即下载
-      link: ./Xdows-Security-4.1/get-started.md#Download
+      link: ./Xdows-Security-5/get-started.md#Download
 features:
-  - title: Xdows Security
-    details: 旨在保护用户设备以及扫描威胁的应用程序。
+  - title: Xdows Security 5
+    details: 基于 WinUI3 + C# 技术构建的杀毒软件，完全开源并使用 MIT 协议
+    link: ./Xdows-Security-5/get-started.html#Download
+    linkText: 查看下载安装教程
+  - title: Xdows Security 4.1
+    details: 基于 WinUI3 + C# 技术构建的杀毒软件
     link: ./Xdows-Security-4.1/get-started.html#Download
+    linkText: 查看下载安装教程
+  - title: Xdows Security 4.0
+    details: 基于 Web 技术构建的杀毒软件
+    link: ./Xdows-Security-4/get-started.html#Download
     linkText: 查看下载安装教程
 ---

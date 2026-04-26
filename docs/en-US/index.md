@@ -9,13 +9,21 @@ hero:
   image: /logo.ico
   actions:
     - theme: brand
-      text: Get Started (4.1)
-      link: ./Xdows-Security-4.1/get-started.md
+      text: Get Started
+      link: ./Xdows-Security-5/get-started.md
     - theme: alt
       text: Download
-      link: ./Xdows-Security-4.1/get-started.md#Download
+      link: ./Xdows-Security-5/get-started.md#Download
 features:
-  - title: Xdows Security
+  - title: Xdows Security 5
+    details: Xdows Security 5 is an antivirus application built with WinUI3 and C#, fully open source under MIT License
+    link: ./Xdows-Security-5/get-started.html#Download
+    linkText: View Installation Guide
+  - title: Xdows Security 4.1
     details: Xdows Security 4.1 is an antivirus application built with WinUI3 and C#
     link: ./Xdows-Security-4.1/get-started.html#Download
+    linkText: View Installation Guide
+  - title: Xdows Security 4.0
+    details: Xdows Security 4.0 is an antivirus application based on Web technology
+    link: ./Xdows-Security-4/get-started.html#Download
     linkText: View Installation Guide

@@ -44,7 +44,7 @@ export default defineConfig({
           },
           { 
             text: 'Getting Started',
-            link: '/en-US/Xdows-Security-4.1/get-started.md',
+            link: '/en-US/Xdows-Security-5/get-started.md',
           },
         ],
         footer: {
@@ -81,7 +81,7 @@ export default defineConfig({
           },
           { 
             text: '快速开始',
-            link: '/zh-HANS/Xdows-Security-4.1/get-started.md',
+            link: '/zh-HANS/Xdows-Security-5/get-started.md',
           },
         ],
         footer: {
@@ -119,7 +119,7 @@ export default defineConfig({
           },
           { 
             text: '快速開始',
-            link: '/zh-HANT/Xdows-Security-4.1/get-started.md',
+            link: '/zh-HANT/Xdows-Security-5/get-started.md',
           },
         ],
         footer: {
@@ -216,8 +216,15 @@ export default defineConfig({
     sidebar: {
       "/en-US/": [
         {
-          text: 'Xdows Security 4.1',
+          text: 'Xdows Security 5',
           collapsed: false,
+          items: [
+            { text: 'Getting Started', link: '/en-US/Xdows-Security-5/get-started' },
+          ]
+        },
+        {
+          text: 'Xdows Security 4.1',
+          collapsed: true,
           items: [
             { text: 'Getting Started', link: '/en-US/Xdows-Security-4.1/get-started' },
             { text: 'Changelog', link: '/en-US/Xdows-Security-4.1/update' },
@@ -257,8 +264,15 @@ export default defineConfig({
       ],
       "/zh-HANS/": [
         {
-          text: 'Xdows Security 4.1',
+          text: 'Xdows Security 5',
           collapsed: false,
+          items: [
+            { text: '快速开始', link: '/zh-HANS/Xdows-Security-5/get-started' },
+          ]
+        },
+        {
+          text: 'Xdows Security 4.1',
+          collapsed: true,
           items: [
             { text: '快速开始', link: '/zh-HANS/Xdows-Security-4.1/get-started' },
             { text: '更新日志', link: '/zh-HANS/Xdows-Security-4.1/update' },
@@ -344,8 +358,15 @@ export default defineConfig({
       ],
       "/zh-HANT/": [
         {
-          text: 'Xdows Security 4.1',
+          text: 'Xdows Security 5',
           collapsed: false,
+          items: [
+            { text: '快速開始', link: '/zh-HANT/Xdows-Security-5/get-started' },
+          ]
+        },
+        {
+          text: 'Xdows Security 4.1',
+          collapsed: true,
           items: [
             { text: '快速開始', link: '/zh-HANT/Xdows-Security-4.1/get-started' },
             { text: '更新日誌', link: '/zh-HANT/Xdows-Security-4.1/update' },
