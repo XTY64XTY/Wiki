@@ -63,7 +63,7 @@ Download the required .NET version from the [official Microsoft website](https:/
 | Name | Description | Open Source |
 |------|-------------|-------------|
 | Xdows Local | Analyzes PE files using import tables, export tables, and other methods | Fully open source |
-| Xdows Model | Built-in scan engine for Xdows Security 5, based on multiple analysis techniques | Fully open source |
+| Xdows Model | High-precision scan engine based on LightGBM | Fully open source |
 | Cloud-based Scan Engine | Cloud scanning service provided by `MEMZUAC` | Closed source |
 | CzkCloud | Cloud scanning service provided by `Tianqi StarMap Network Technology` | Closed source |
 
