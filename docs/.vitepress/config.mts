@@ -220,6 +220,8 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: 'Getting Started', link: '/en-US/Xdows-Security-5/get-started' },
+            { text: 'Changelog', link: '/en-US/Xdows-Security-5/update' },
+            { text: 'Xdows Tools', link: '/en-US/Xdows-Security-5/Xdows-Tools/get-started' },
           ]
         },
         {
@@ -268,6 +270,8 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: '快速开始', link: '/zh-HANS/Xdows-Security-5/get-started' },
+            { text: '更新日志', link: '/zh-HANS/Xdows-Security-5/update' },
+            { text: 'Xdows Tools', link: '/zh-HANS/Xdows-Security-5/Xdows-Tools/get-started' },
           ]
         },
         {
@@ -362,6 +366,8 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: '快速開始', link: '/zh-HANT/Xdows-Security-5/get-started' },
+            { text: '更新日誌', link: '/zh-HANT/Xdows-Security-5/update' },
+            { text: 'Xdows Tools', link: '/zh-HANT/Xdows-Security-5/Xdows-Tools/get-started' },
           ]
         },
         {
