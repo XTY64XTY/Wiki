@@ -1,10 +1,3 @@
-::: warning 注意
-该版本已过时。建议查看最新的 [Xdows Security 5](/zh-HANS/Xdows-Security-5/get-started) 版本。
-:::
-
-> [!NOTE] 通知
-> Xdows Security 4.1 正在成为 IceZero AntiVirus
-
 # 快速开始 {#GetStarted}
 
 来看看下一代基于 `WinUI3` + `C#` 技术构建的杀毒软件

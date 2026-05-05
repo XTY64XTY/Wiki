@@ -1,7 +1,3 @@
-::: warning 注意
-该版本已过时。建议查看最新的 [Xdows Security 5](/zh-HANS/Xdows-Security-5/get-started) 版本。
-:::
-
 # 快速开始 {#GetStarted}
 
 ![HomeUI](./PNG/HomeUI.png)

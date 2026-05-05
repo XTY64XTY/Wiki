@@ -1,7 +1,3 @@
-::: warning 注意
-该版本已过时。建议查看最新的 [Xdows Security 4.1](/zh-HANS/Xdows-Security-4.1/get-started) 版本。
-:::
-
 # 设置功能
 
 > [!NOTE] 重要

@@ -1,6 +1,3 @@
-> [!NOTE] 通知
-> Xdows Security 正在成為 IceZero AntiVirus
-
 # 快速開始 {#GetStarted}
 
 來看看下一代基於 `WinUI3` + `C#` 技術構建的防毒軟體
@@ -9,7 +6,6 @@
 
 Xdows Security 4.1 是一個基於 `WinUI3` + `C#` 技術構建的防毒軟體。
 
-## 下載 {#Download}
 
 <Linkcard url="https://github.com/LoveProgrammingMint/Xdows-Security/releases" title="下載 Xdows Security Beta" description="https://github.com/LoveProgrammingMint/Xdows-Security/releases" logo="/logo.ico"/>
 

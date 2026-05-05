@@ -10,13 +10,13 @@ import './custom-block.css'
 import './blockquote.css'
 import './rainbow.css'
 import Linkcard from "./components/Linkcard.vue"
+import ProjectNotices from "./components/ProjectNotices.vue"
 // giscus
 import giscusTalk from 'vitepress-plugin-comment-with-giscus';
 import { useData, useRoute } from 'vitepress';
 // 图片放大
 import mediumZoom from 'medium-zoom';
 import { onMounted, watch, nextTick, onBeforeUnmount } from 'vue';
-import { useRoute } from 'vitepress';
 // 时间线
 import "vitepress-markdown-timeline/dist/theme/index.css";
 
@@ -46,16 +46,30 @@ import '@nolebase/vitepress-plugin-enhanced-readabilities/client/style.css'
 export default {
   extends: DefaultTheme,
   Layout: () => {
+    const route = useRoute()
+
+    const getItemKeyFromPath = (path: string): string | null => {
+      const parts = path.split('?')[0].split('#')[0].split('/').filter(Boolean)
+      if (parts.length < 2) return null
+      const itemKey = parts[1]
+      return itemKey || null
+    }
+
     return h(DefaultTheme.Layout, null, {
        // 为较宽的屏幕的导航栏添加阅读增强菜单
       'nav-bar-content-after': () => h(NolebaseEnhancedReadabilitiesMenu), 
        // 为较窄的屏幕（通常是小于 iPad Mini）添加阅读增强菜单
       'nav-screen-content-after': () => h(NolebaseEnhancedReadabilitiesScreenMenu), 
+      'doc-before': () => {
+        const itemKey = getItemKeyFromPath(route.path)
+        return itemKey ? h(ProjectNotices, { item: itemKey }) : null
+      },
      })
   },
-  enhanceApp({ app , router }) {
+  enhanceApp({ app, router }: Parameters<NonNullable<Theme['enhanceApp']>>[0]) {
     // 注册全局组件
     app.component('Linkcard', Linkcard); // 链接卡片
+    app.component('ProjectNotices', ProjectNotices);
         if (typeof window !== 'undefined') {
       loadNProgress().then((nprogress) => {
         if (nprogress) {
@@ -89,7 +103,7 @@ export default {
     // giscus配置
     const { frontmatter } = useData();
     giscusTalk({
-      repo: 'XTY64XTY12345/Wiki', //仓库
+      repo: 'XTY64XTY/Wiki', //仓库
       repoId: 'R_kgDOMWWaig', //仓库ID
       category: 'Announcements', // 讨论分类
       categoryId: 'DIC_kwDOMWWais4CkG7I', //讨论分类ID

@@ -8,13 +8,8 @@ Xdows Security 5 是一個基於 `WinUI3` + `C#` 技術構建的防毒軟體，�
 
 ## 下載 {#Download}
 
-任選其一即可
-
 <Linkcard url="https://github.com/XTY64XTY/Xdows-Security-5/releases" title="下載 Xdows Security 5" description="https://github.com/XTY64XTY/Xdows-Security-5/releases" logo="/logo.ico"/>
 
-> [!NOTE] Github 無法訪問或速度緩慢
->
-> 請使用加速器
 
 ## 常見問題 {#Question}
 

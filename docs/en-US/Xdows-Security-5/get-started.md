@@ -8,13 +8,7 @@ Xdows Security 5 is an antivirus software built using `WinUI 3` and `C#`, fully 
 
 ## Download {#Download}
 
-Choose either option
-
 <Linkcard url="https://github.com/XTY64XTY/Xdows-Security-5/releases" title="Download Xdows Security 5" description="https://github.com/XTY64XTY/Xdows-Security-5/releases" logo="/logo.ico"/>
-
-> [!NOTE] GitHub is inaccessible or slow
->
-> Please use a VPN or accelerator
 
 ## FAQ {#Question}
 
