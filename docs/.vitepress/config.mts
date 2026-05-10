@@ -413,6 +413,6 @@ export default defineConfig({
       ],
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/XTY64XTY12345' }
+      { icon: 'github', link: 'https://github.com/XTY64XTY' }
     ]
 }})

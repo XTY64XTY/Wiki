@@ -103,7 +103,7 @@ export default {
     // giscus配置
     const { frontmatter } = useData();
     giscusTalk({
-      repo: 'XTY64XTY/Wiki', //仓库
+      repo: 'XTY64XTY12345/Wiki', //仓库
       repoId: 'R_kgDOMWWaig', //仓库ID
       category: 'Announcements', // 讨论分类
       categoryId: 'DIC_kwDOMWWais4CkG7I', //讨论分类ID
