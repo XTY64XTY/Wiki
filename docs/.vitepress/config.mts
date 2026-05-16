@@ -263,6 +263,13 @@ export default defineConfig({
             { text: 'Changelog', link: '/en-US/Xdows-Security-4/update' },
           ]
         },
+        {
+          text: 'Xdows Model',
+          collapsed: true,
+          items: [
+            { text: 'Getting Started', link: '/en-US/Xdows-Model/get-started' },
+          ]
+        },
       ],
       "/zh-HANS/": [
         {
@@ -329,6 +336,13 @@ export default defineConfig({
             { text: '更新日志', link: '/zh-HANS/Xdows-Security/update' },
             { text: '代码授权', link: '/zh-HANS/Xdows-Security/code-authorization' },
             { text: '开源说明', link: '/zh-HANS/Xdows-Security/Open-Source' },
+          ]
+        },
+        {
+          text: 'Xdows Model',
+          collapsed: true,
+          items: [
+            { text: '快速开始', link: '/zh-HANS/Xdows-Model/get-started' },
           ]
         },
         {
@@ -408,6 +422,13 @@ export default defineConfig({
               ]
             },
             { text: '更新日誌', link: '/zh-HANT/Xdows-Security-4/update' },
+          ]
+        },
+        {
+          text: 'Xdows Model',
+          collapsed: true,
+          items: [
+            { text: '快速開始', link: '/zh-HANT/Xdows-Model/get-started' },
           ]
         },
       ],
