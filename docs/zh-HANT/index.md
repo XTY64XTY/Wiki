@@ -27,4 +27,8 @@ features:
     details: 基於 Web 技術構建的防毒軟體
     link: ./Xdows-Security-4/get-started.html#Download
     linkText: 查看下載安裝教程
+  - title: Xdows Model
+    details: 基於 LightGBM 的掃描引擎
+    link: ./Xdows-Model/get-started.html
+    linkText: 查看模型文檔
 ---

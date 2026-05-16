@@ -27,3 +27,8 @@ features:
     details: Xdows Security 4.0 is an antivirus application based on Web technology
     link: ./Xdows-Security-4/get-started.html#Download
     linkText: View Installation Guide
+  - title: Xdows Model
+    details: LightGBM-based scanning engine
+    link: ./Xdows-Model/get-started.html
+    linkText: View Model Documentation
+---
