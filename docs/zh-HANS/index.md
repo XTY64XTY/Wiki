@@ -27,4 +27,12 @@ features:
     details: 基于 Web 技术构建的杀毒软件
     link: ./Xdows-Security-4/get-started.html#Download
     linkText: 查看下载安装教程
+  - title: Xdows Security 3.0
+    details: 基于内嵌 Web 技术的杀毒软件
+    link: ./Xdows-Security/get-started.html#Download
+    linkText: 查看下载安装教程
+  - title: Xdows Model
+    details: 基于 LightGBM 的扫描引擎
+    link: ./Xdows-Model/get-started.html
+    linkText: 查看模型文档
 ---
