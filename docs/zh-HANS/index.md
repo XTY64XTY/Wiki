@@ -29,7 +29,7 @@ features:
     linkText: 查看下载安装教程
   - title: Xdows Security 3.0
     details: 基于内嵌 Web 技术的杀毒软件
-    link: ./Xdows-Security/get-started.html#Download
+    link: ./Xdows-Security/get-started.html#下载
     linkText: 查看下载安装教程
   - title: Xdows Model
     details: 基于 LightGBM 的扫描引擎
