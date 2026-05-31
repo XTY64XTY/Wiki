@@ -85,4 +85,4 @@ Download the required .NET version from the [official Microsoft website](https:/
 
 ## License {#License}
 
-This project is licensed under the MIT License. See [LICENSE](https://github.com/XTY64XTY/Xdows-Security-5/blob/master/LICENSE.txt) for details.
+This project is licensed under the MIT License. See [LICENSE](https://github.com/XTY64XTY/Xdows-Security-5/blob/main/LICENSE.txt) for details.
