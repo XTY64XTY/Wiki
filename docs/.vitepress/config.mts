@@ -5,7 +5,7 @@ import taskLists from 'markdown-it-task-checkbox'
 
 export default defineConfig({
   title: "Xdows Software",
-  description: "Xdows Software",
+  description: "Xdows Security 是由 Xdows Software 开发，使用自主研发的高精准度模型 Xdows Model 提供扫描支持",
   head: [
     // 改变title的图标
     [
@@ -14,6 +14,63 @@ export default defineConfig({
         rel: 'icon',
         href: '/logo.ico',
       },
+    ],
+    // SEO meta
+    [
+      'meta',
+      { name: 'description', content: 'Xdows Security 是由 Xdows Software 开发，使用自主研发的高精准度模型 Xdows Model 提供扫描支持' },
+    ],
+    [
+      'meta',
+      { name: 'keywords', content: 'Xdows, Xdows Software, Xdows Security, Xdows Tools, 安全软件, 插件, 文档' },
+    ],
+    [
+      'meta',
+      { name: 'robots', content: 'index,follow' },
+    ],
+    [
+      'meta',
+      { property: 'og:title', content: 'Xdows Software' },
+    ],
+    [
+      'meta',
+      { property: 'og:description', content: 'Xdows Security 是由 Xdows Software 开发，使用自主研发的高精准度模型 Xdows Model 提供扫描支持' },
+    ],
+    [
+      'meta',
+      { property: 'og:type', content: 'website' },
+    ],
+    [
+      'meta',
+      { property: 'og:url', content: 'https://xty64xty.netlify.app' },
+    ],
+    [
+      'meta',
+      { property: 'og:locale', content: 'zh_CN' },
+    ],
+    [
+      'meta',
+      { property: 'og:locale:alternate', content: 'en_US' },
+    ],
+    [
+      'meta',
+      { property: 'og:locale:alternate', content: 'zh_Hant' },
+    ],
+    [
+      'meta',
+      { name: 'twitter:card', content: 'summary' },
+    ],
+    [
+      'meta',
+      { name: 'twitter:title', content: 'Xdows Software' },
+    ],
+    [
+      'meta',
+      { name: 'twitter:description', content: 'Xdows Security 是由 Xdows Software 开发，使用自主研发的高精准度模型 Xdows Model 提供扫描支持' },
+    ],
+    [
+      'link',
+      { rel: 'canonical', href: 'https://xty64xty.netlify.app' },
     ],
   ],
   vite: { 
@@ -36,6 +93,7 @@ export default defineConfig({
       label: 'English',
       lang: 'en-US',
       link: '/en-US/',
+      description: 'Xdows Security is developed by Xdows Software, powered by the self-developed high-precision model Xdows Model for scanning support',
       themeConfig:{
         nav: [
           { 
@@ -73,6 +131,7 @@ export default defineConfig({
       label: '简体中文',
       lang: 'zh-HANS', 
       link: '/zh-HANS/',
+      description: 'Xdows Security 是由 Xdows Software 开发，使用自主研发的高精准度模型 Xdows Model 提供扫描支持',
       themeConfig:{
         nav: [
           { 
@@ -111,6 +170,7 @@ export default defineConfig({
       label: '繁體中文',
       lang: 'zh-HANT', 
       link: '/zh-HANT/',
+      description: 'Xdows Security 是由 Xdows Software 開發，使用自主研發的高精準度模型 Xdows Model 提供掃描支援',
       themeConfig:{
         nav: [
           { 
