@@ -1,6 +1,8 @@
 ---
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
+title: Xdows Software 文檔
+description: Xdows Software 文檔中心，提供 Xdows Security、Xdows Model 等項目的下載、使用、開發與更新說明。
 
 hero:
   name: "Xdows Software"

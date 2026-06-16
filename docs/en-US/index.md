@@ -1,6 +1,8 @@
 ---
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
+title: Xdows Software Documentation
+description: Xdows Software documentation for Xdows Security, Xdows Model, downloads, usage guides, plugin development, and project updates.
 
 hero:
   name: "Xdows Software"

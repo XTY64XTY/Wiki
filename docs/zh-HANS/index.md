@@ -1,6 +1,8 @@
 ---
 # https://vitepress.dev/reference/default-theme-home-page
 layout: home
+title: Xdows Software 文档
+description: Xdows Software 文档中心，提供 Xdows Security、Xdows Model、Xdows Cloud、Winget++ 等项目的下载、使用和开发说明。
 
 hero:
   name: "Xdows Software"

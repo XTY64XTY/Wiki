@@ -1,3 +1,8 @@
+---
+title: Xdows Security 3.0
+description: Xdows Security 3.0 是基于内嵌 Web 技术的杀毒软件，本页提供简介、运行条件、下载、安装和开源说明。
+---
+
 # 快速开始
 
 ::: tip

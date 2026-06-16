@@ -1,3 +1,8 @@
+---
+title: Xdows Security 4.0
+description: Xdows Security 4.0 是基于 Web 技术构建的杀毒软件，本页提供简介、下载、公测进度和核心架构说明。
+---
+
 # 快速开始 {#GetStarted}
 
 ![HomeUI](./PNG/HomeUI.png)
