@@ -7,15 +7,18 @@ description: Xdows Model is a malicious-file scanning model project based on Lig
 
 > Repository: <https://github.com/XTY64XTY/Xdows-Model>
 
-Xdows-Model is a malicious-file scanning model project trained with **LightGBM** (via ML.NET) and executed with **ONNX Runtime**. The current version is **v2**, implemented in C# and split by responsibilities into three sub-projects.
+Xdows-Model is a malicious-file scanning model project trained with **LightGBM** (via ML.NET) and executed with **ONNX Runtime**. The current version is **v2**, implemented in C# and split by responsibilities across managed training, managed inference, evaluation, and a native runtime bridge.
 
 ## Project Structure
 
 | Sub-project | Description |
 |-------------|-------------|
+| `Xdows-Model-Config` | Shared paths, thresholds, and model hyperparameter configuration |
 | `Xdows-Model-Caller` | Minimal invocation sample demonstrating how to integrate model inference into your application |
+| `Xdows-Model-Evaluator` | Evaluation and smoke-test helper |
 | `Xdows-Model-Invoker` | Inference core library, including model loading, feature extraction, and scanning |
 | `Xdows-Model-Maker` | Training tool, including data loading, feature extraction, model training, and ONNX export |
+| `Xdows-Model-Native` | Native C ABI wrapper used by Xdows Security driver protection |
 
 ### Xdows-Model-Invoker
 
@@ -62,7 +65,14 @@ If none are found, a `FileNotFoundException` is thrown.
 
 ### 3. Feature Extraction
 
-Extracts **279 features** (`FeatureCount = 279`), including:
+Standard mode extracts **299 features** (`FileFeatures.FeatureCount = 299`), including byte statistics, entropy, PE layout, section, import/export, and header-derived signals. Flash mode extracts **68 features** for fast head/tail scanning. Pro mode uses a hybrid vector:
+
+- Standard features: 299 dimensions
+- Flash features: 68 dimensions
+- PE structure features: 32 dimensions
+- Raw section bytes: dynamically sized from the Pro model's ONNX `Features` input dimension
+
+The Pro path derives the raw bytes-per-section value from the loaded `Xdows-Model-Pro.onnx` metadata. Do not hard-code one fixed Pro feature count; retrained Pro models can carry a different valid `Features` dimension.
 
 | Feature Category | Dimensions | Description |
 |-----------------|------------|-------------|
@@ -72,12 +82,14 @@ Extracts **279 features** (`FeatureCount = 279`), including:
 | Block entropy statistics | 8 | Min/max/mean/variance, min/max entropy block positions, first/last block entropy |
 | Byte distribution | 5 | Unique byte count, most common byte and ratio, least common byte and ratio |
 | Character ratios | 5 | Printable, control, whitespace, alphabetic, numeric |
-| Zero-byte features | 2 | Zero-byte ratio, longest zero-byte contiguous run |
-| High-byte ratio | 1 | Ratio of bytes in 0x80–0xFF range |
+| Zero/high-entropy features | 2 | Zero-byte ratio, high-entropy block ratio |
+| Extended byte/run statistics | 16 | Byte mean/variance, distribution skewness/kurtosis, zero/non-zero run counts and lengths, low/printable/extended ASCII ratios |
+| PE header summary | 4 | Section count, timestamp, characteristics, optional-header magic |
+| Header entropy summary | 4 | Min/max/mean/variance for the file header region |
 
 ### 4. ONNX Inference
 
-- Inputs: `Features` (1×279 feature tensor) and `Label` (boolean placeholder)
+- Inputs: `Features` and `Label` (boolean placeholder). Standard uses 299 dimensions, Flash uses 68 dimensions, and Pro derives its dimension from the loaded ONNX model.
 - Output: Reads `Probability.output` and multiplies by 100 to convert to percentage
 
 ### 5. Decision Output
