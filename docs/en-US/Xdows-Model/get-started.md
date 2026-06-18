@@ -1,162 +1,120 @@
 ---
 title: Xdows Model
-description: Xdows Model is a malicious-file scanning model project based on LightGBM, ML.NET, and ONNX Runtime, covering structure, inference, training, and C# integration.
+description: Xdows Model is the local malicious-file model repository used by Xdows Security, providing Standard, Flash, and Pro ONNX inference modes, training, evaluation, and native runtime integration.
 ---
 
-# Xdows-Model
+# Xdows Model
 
 > Repository: <https://github.com/XTY64XTY/Xdows-Model>
 
-Xdows-Model is a malicious-file scanning model project trained with **LightGBM** (via ML.NET) and executed with **ONNX Runtime**. The current version is **v2**, implemented in C# and split by responsibilities across managed training, managed inference, evaluation, and a native runtime bridge.
+Xdows Model is the local static scanning model repository for Xdows Security. It trains models with ML.NET LightGBM, runs inference with ONNX Runtime, and provides a managed invoker, a command-line caller, an evaluator, and a native runtime used by the Xdows Security driver-protection path.
 
-## Project Structure
+## Model Modes
 
-| Sub-project | Description |
-|-------------|-------------|
-| `Xdows-Model-Config` | Shared paths, thresholds, and model hyperparameter configuration |
-| `Xdows-Model-Caller` | Minimal invocation sample demonstrating how to integrate model inference into your application |
-| `Xdows-Model-Evaluator` | Evaluation and smoke-test helper |
-| `Xdows-Model-Invoker` | Inference core library, including model loading, feature extraction, and scanning |
-| `Xdows-Model-Maker` | Training tool, including data loading, feature extraction, model training, and ONNX export |
-| `Xdows-Model-Native` | Native C ABI wrapper used by Xdows Security driver protection |
+The repository currently maintains three ONNX models:
 
-### Xdows-Model-Invoker
+| Mode | File | Purpose | Feature contract | Default threshold |
+| --- | --- | --- | --- | --- |
+| Standard | `Xdows-Model.onnx` | Default static scan | 299-dimensional full PE/byte-statistics feature set | 92% |
+| Flash | `Xdows-Model-Flash.onnx` | Fast pre-screening | 68-dimensional head/tail feature set | 96% |
+| Pro | `Xdows-Model-Pro.onnx` | Higher-cost deep static scan | Standard + Flash + 32 PE-structure features + dynamic raw section bytes | 94% |
 
-The inference core library provides:
+Pro mode is not a fixed-dimension model. The Invoker reads the ONNX `Features` input dimension and derives the raw bytes-per-section value from it. After retraining a Pro model, callers do not need to hard-code a new feature length as long as the dimension can be parsed by the current hybrid feature contract.
 
-- `ModelInvoker`: Model initialization, loading, and inference with thread-safe singleton support
-- `FeatureExtractor`: File feature extraction and PE format detection
+## Repository Layout
 
-### Xdows-Model-Maker
-
-The training tool provides:
-
-- `DataLoader`: Parallel loading of malicious/benign sample files with automatic non-PE file cleanup
-- `FeatureExtractor`: Shares the same feature extraction logic as the Invoker
-- `ModelTrainer`: ML.NET LightGBM-based binary classification model training and evaluation
-- `TrainingConfig`: Training hyperparameter configuration
-
-### Xdows-Model-Caller
-
-Minimal invocation sample that scans a single file via command-line argument:
-
-```
-Xdows-Model-Caller.exe <file-path>
-```
+| Project | Role |
+| --- | --- |
+| `Xdows-Model-Config` | Training paths, model output paths, thresholds, and hyperparameters |
+| `Xdows-Model-Maker` | Interactive training and sample-cleaning tool for Standard, Flash, and Pro |
+| `Xdows-Model-Invoker` | Managed inference library for model loading, feature extraction, ONNX inference, and threshold decisions |
+| `Xdows-Model-Caller` | Command-line sample with `-s`, `-f`, and `-p` model selection |
+| `Xdows-Model-Evaluator` | Batch evaluator that reports accuracy, TPR, FPR, average scan time, and optional hard-case CSV output |
+| `Xdows-Model-Native` | C ABI native wrapper used by the Xdows Security main app in the driver-protection path |
 
 ## Inference Flow
 
-The `Xdows-Model-Invoker` pipeline is as follows:
+1. Select a model mode and load the corresponding ONNX file.
+2. Check that the target file exists.
+3. Standard mode validates the PE header; Flash and Pro read the file through their own feature extractors.
+4. Extract a `Features` tensor matching the current model mode.
+5. Run ONNX Runtime and read `Probability.output`.
+6. Apply the mode threshold from `TrainingConfig` and return a safe or malicious decision.
 
-### 1. Model Preparation
+Default model discovery checks the runtime directory, embedded assembly resources, and the assembly directory. Production integrations should publish all three `.onnx` files with the ONNX Runtime native dependencies.
 
-The default model file name is `Xdows-Model.onnx`, discovered in the following priority order:
+## Command-Line Caller
 
-1. Runtime directory (`AppContext.BaseDirectory`)
-2. Embedded resource (extracted from the assembly and written to the runtime directory)
-3. Assembly directory (copied to the runtime directory)
+```powershell
+Xdows-Model-Caller.exe <file-path> [-s] [-f] [-p]
+```
 
-If none are found, a `FileNotFoundException` is thrown.
+The mode flags are mutually exclusive:
 
-### 2. File Validation
+- `-s`: use the Standard model.
+- `-f`: use the Flash model.
+- `-p`: use the Pro model.
 
-- Confirms the target file exists
-- Validates PE files by `MZ` and `PE` headers; non-PE files throw a `NotSupportedException`
+When no mode flag is provided, Standard is used.
 
-### 3. Feature Extraction
-
-Standard mode extracts **299 features** (`FileFeatures.FeatureCount = 299`), including byte statistics, entropy, PE layout, section, import/export, and header-derived signals. Flash mode extracts **68 features** for fast head/tail scanning. Pro mode uses a hybrid vector:
-
-- Standard features: 299 dimensions
-- Flash features: 68 dimensions
-- PE structure features: 32 dimensions
-- Raw section bytes: dynamically sized from the Pro model's ONNX `Features` input dimension
-
-The Pro path derives the raw bytes-per-section value from the loaded `Xdows-Model-Pro.onnx` metadata. Do not hard-code one fixed Pro feature count; retrained Pro models can carry a different valid `Features` dimension.
-
-| Feature Category | Dimensions | Description |
-|-----------------|------------|-------------|
-| Byte frequency | 256 | Occurrence frequency of each byte value (0x00–0xFF) |
-| File size | 1 | Log-transformed `log(fileSize + 1)` |
-| Global entropy | 1 | Shannon entropy of the entire file |
-| Block entropy statistics | 8 | Min/max/mean/variance, min/max entropy block positions, first/last block entropy |
-| Byte distribution | 5 | Unique byte count, most common byte and ratio, least common byte and ratio |
-| Character ratios | 5 | Printable, control, whitespace, alphabetic, numeric |
-| Zero/high-entropy features | 2 | Zero-byte ratio, high-entropy block ratio |
-| Extended byte/run statistics | 16 | Byte mean/variance, distribution skewness/kurtosis, zero/non-zero run counts and lengths, low/printable/extended ASCII ratios |
-| PE header summary | 4 | Section count, timestamp, characteristics, optional-header magic |
-| Header entropy summary | 4 | Min/max/mean/variance for the file header region |
-
-### 4. ONNX Inference
-
-- Inputs: `Features` and `Label` (boolean placeholder). Standard uses 299 dimensions, Flash uses 68 dimensions, and Pro derives its dimension from the loaded ONNX model.
-- Output: Reads `Probability.output` and multiplies by 100 to convert to percentage
-
-### 5. Decision Output
-
-A file is classified as malicious when `probability >= 90.0f`.
-
-## Quick Integration (C#)
+## C# Integration
 
 ```csharp
+using Xdows_Model_Config;
 using Xdows_Model_Invoker;
 
-// Initialize model (uses default model discovery when path is omitted)
-ModelInvoker.Initialize();
+ModelInvoker.ConfigureThresholds(new TrainingConfig());
+ModelInvoker.InitializePro();
 
-// Scan file
-var (isVirus, probability) = ModelInvoker.ScanFile(@"C:\test\sample.exe");
-Console.WriteLine($"IsVirus: {isVirus}, Probability: {probability:F2}%");
+var (isVirus, probability) = ModelInvoker.ScanFile(@"C:\Samples\app.exe");
 
-// Release model resources
 ModelInvoker.UnloadModel();
 ```
 
-You can also specify a model path when scanning:
+Use `Initialize()` for Standard, `InitializeFlash()` for Flash, and `InitializePro()` for Pro. Each initializer can also receive a custom ONNX path.
 
-```csharp
-var (isVirus, probability) = ModelInvoker.ScanFile(@"C:\test\sample.exe", @"C:\models\Xdows-Model.onnx");
+## Training And Evaluation
+
+`Xdows-Model-Maker` is the interactive training tool. Default sample directories come from `TrainingConfig`:
+
+- Malicious samples: `D:\Code\Model\Files\Black`
+- Benign samples: `D:\Code\Model\Files\White`
+
+The training menu can train one or more of Standard, Flash, and Pro. Pro training starts at `ProExpansionStartBytesPerSection`, expands the raw byte window by `ProExpansionFactor`, and stops when it reaches `ProExpansionMaxBytesPerSection`, the AUC gain falls below the configured threshold, or the patience limit is reached.
+
+Batch evaluation example:
+
+```powershell
+dotnet run --project D:\Code\Xdows-Model\Xdows-Model-Evaluator -- --mode all --limit 700 --csv hard-cases.csv
 ```
 
-## Training Flow
+Common options:
 
-Train a model using `Xdows-Model-Maker`:
+- `--mode all|standard|flash|pro`
+- `--black <folder>`
+- `--white <folder>`
+- `--limit <n>`
+- `--csv <path>`
+- `--standard-model <path>`
+- `--flash-model <path>`
+- `--pro-model <path>`
 
-1. **Prepare samples**: Place malicious samples in the `Black` directory and benign samples in the `White` directory
-2. **Clean data**: Run the Maker and select "Clean non-PE files" to automatically remove non-PE samples
-3. **Train model**: Select "Train model" and the program will automatically:
-   - Load all samples in parallel and extract features
-   - Split into 80/20 training and test sets
-   - Train a LightGBM binary classification model
-   - Output evaluation metrics (accuracy, AUC, AUPRC, F1 score, confusion matrix)
-   - Save the ML.NET model (`.zip`) and ONNX model (`.onnx`)
+## Relationship With Xdows Security
 
-### Training Configuration
+The Xdows Security main app does not run .NET model code inside the driver, and the driver does not start the command-line scanner. In the driver-protection path, the main app loads `Xdows-Model-Native.dll`, and that native runtime calls ONNX Runtime for local inference.
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| LearningRate | 0.1 | Learning rate |
-| NumberOfLeaves | 31 | Number of leaves |
-| MinimumExampleCountPerLeaf | 20 | Minimum samples per leaf node |
-| NumberOfIterations | 400 | Number of iterations |
-| RandomSeed | 42 | Random seed |
+When publishing Xdows Security, the app output should include:
 
-## Dependencies
-
-- **.NET 10.0**
-- [Microsoft.ML](https://www.nuget.org/packages/Microsoft.ML/) 5.0.0
-- [Microsoft.ML.OnnxRuntime](https://www.nuget.org/packages/Microsoft.ML.OnnxRuntime/) 1.26.0
-- [Microsoft.ML.LightGBM](https://www.nuget.org/packages/Microsoft.ML.LightGBM/) 5.0.0 (Maker only)
-
-## Typical Use Cases
-
-- Local static pre-screening in antivirus/security tools
-- First-layer risk scoring in malware analysis pipelines
-- Multi-engine strategy combined with signature and behavior-based detection
+- `Xdows-Model.onnx`
+- `Xdows-Model-Flash.onnx`
+- `Xdows-Model-Pro.onnx`
+- `Xdows-Model-Native.dll`
+- `onnxruntime.dll`
+- `onnxruntime_providers_shared.dll`
 
 ## Notes
 
-- The current inference flow only supports **PE files**; non-PE files are rejected
-- The `90%` threshold is a policy value and should be calibrated with your own sample set
-- For production usage, it is recommended to add: scan timeout control, model version management, logging and audit
-- The project is open-sourced under the MIT license
+- Do not commit live malware samples to the repository.
+- Do not hard-code Pro to one fixed feature length when updating Pro training or inference.
+- Thresholds are product policy, not part of the model itself; evaluate them against the target sample set before release.
+- The native runtime and managed Invoker should use the same model files, feature contract, and threshold configuration.

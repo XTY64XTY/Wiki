@@ -1,162 +1,120 @@
 ---
 title: Xdows Model
-description: Xdows Model 是基於 LightGBM、ML.NET 和 ONNX Runtime 的惡意檔案掃描模型專案，文檔介紹結構、推理、訓練和接入方式。
+description: Xdows Model 是 Xdows Security 使用的本機惡意檔案模型倉庫，提供 Standard、Flash、Pro 三種 ONNX 推理模式、訓練工具、評估工具和原生執行階段。
 ---
 
-# Xdows-Model
+# Xdows Model
 
 > 專案倉庫：<https://github.com/XTY64XTY/Xdows-Model>
 
-Xdows-Model 是一個基於 **LightGBM**（透過 ML.NET 實作）訓練，並使用 **ONNX Runtime** 進行推理的惡意檔案掃描模型專案。目前版本為 **v2**，使用 C# 實作，按職責拆分為託管訓練、託管推理、評估工具和原生執行階段橋接。
+Xdows Model 是 Xdows Security 的本機靜態掃描模型倉庫。它使用 ML.NET LightGBM 訓練模型，使用 ONNX Runtime 執行推理，並提供託管呼叫庫、命令列呼叫器、評估工具和供 Xdows Security 驅動防護路徑呼叫的原生執行階段。
 
-## 專案結構
+## 模型模式
 
-| 子專案 | 說明 |
-|--------|------|
-| `Xdows-Model-Config` | 共享訓練路徑、閾值與模型超參數設定 |
-| `Xdows-Model-Caller` | 最小呼叫範例，示範如何在業務程式中接入模型推理 |
-| `Xdows-Model-Evaluator` | 評估與煙測輔助工具 |
-| `Xdows-Model-Invoker` | 推理核心函式庫，包含模型載入、特徵提取與掃描推理 |
-| `Xdows-Model-Maker` | 訓練工具，包含資料載入、特徵提取、模型訓練與 ONNX 匯出 |
-| `Xdows-Model-Native` | 供 Xdows Security 驅動防護呼叫的原生 C ABI 封裝 |
+目前倉庫維護三種 ONNX 模型：
 
-### Xdows-Model-Invoker
+| 模式 | 檔案 | 適用目標 | 特徵契約 | 預設判毒閾值 |
+| --- | --- | --- | --- | --- |
+| Standard | `Xdows-Model.onnx` | 預設靜態掃描 | 299 維完整 PE/位元組統計特徵 | 92% |
+| Flash | `Xdows-Model-Flash.onnx` | 快速預篩 | 68 維頭尾區域特徵 | 96% |
+| Pro | `Xdows-Model-Pro.onnx` | 更高成本的深度靜態掃描 | Standard + Flash + 32 維 PE 結構特徵 + 動態 raw 節區位元組 | 94% |
 
-推理核心函式庫，提供以下功能：
+Pro 模式不是固定維度模型。Invoker 會讀取 ONNX 的 `Features` 輸入維度，再反推出每個節區使用的 raw 位元組數。重新訓練 Pro 模型後，只要維度能被目前混合特徵契約解析，呼叫端就不需要硬編碼新的特徵長度。
 
-- `ModelInvoker`：模型初始化、載入與推理，支援執行緒安全的單例模式
-- `FeatureExtractor`：檔案特徵提取與 PE 檔格式識別
+## 倉庫組成
 
-### Xdows-Model-Maker
-
-訓練工具，提供以下功能：
-
-- `DataLoader`：並行載入黑/白樣本檔案，支援非 PE 檔案自動清洗
-- `FeatureExtractor`：與 Invoker 共用相同的特徵提取邏輯
-- `ModelTrainer`：基於 ML.NET LightGBM 的二分類模型訓練與評估
-- `TrainingConfig`：訓練超參數設定
-
-### Xdows-Model-Caller
-
-最小呼叫範例，展示如何透過命令列參數掃描單一檔案：
-
-```
-Xdows-Model-Caller.exe <檔案路徑>
-```
+| 專案 | 作用 |
+| --- | --- |
+| `Xdows-Model-Config` | 訓練路徑、模型輸出路徑、閾值和超參數設定 |
+| `Xdows-Model-Maker` | 互動式訓練與樣本清洗工具，可訓練 Standard、Flash、Pro |
+| `Xdows-Model-Invoker` | 託管推理庫，負責模型載入、特徵提取、ONNX 推理和閾值判定 |
+| `Xdows-Model-Caller` | 命令列呼叫範例，可用 `-s`、`-f`、`-p` 選擇模型 |
+| `Xdows-Model-Evaluator` | 批次評估工具，可輸出準確率、TPR、FPR、平均掃描耗時和誤判樣本 CSV |
+| `Xdows-Model-Native` | C ABI 原生封裝，供 Xdows Security 主程式在驅動防護路徑中直接呼叫 |
 
 ## 推理流程
 
-`Xdows-Model-Invoker` 的核心流程如下：
+1. 選擇模型模式並載入對應 ONNX 檔案。
+2. 檢查目標檔案是否存在。
+3. Standard 模式要求檔案滿足 PE 標頭校驗；Flash 和 Pro 按各自特徵提取器讀取檔案內容。
+4. 提取與目前模型模式匹配的 `Features` 張量。
+5. 呼叫 ONNX Runtime 讀取 `Probability.output`。
+6. 按 `TrainingConfig` 中的模式閾值輸出安全或惡意判定。
 
-### 1. 模型準備
+預設模型發現順序為執行目錄、組件嵌入資源、組件所在目錄。生產整合時應確保三個 `.onnx` 檔案與 ONNX Runtime 原生相依項一同發佈。
 
-預設模型檔名為 `Xdows-Model.onnx`，按以下優先順序查找：
+## 命令列呼叫
 
-1. 執行目錄（`AppContext.BaseDirectory`）
-2. 嵌入資源（從組件提取並寫入執行目錄）
-3. 組件所在目錄（複製到執行目錄）
+```powershell
+Xdows-Model-Caller.exe <檔案路徑> [-s] [-f] [-p]
+```
 
-若均未找到，則擲回 `FileNotFoundException`。
+參數互斥：
 
-### 2. 檔案校驗
+- `-s`：使用 Standard 模型。
+- `-f`：使用 Flash 模型。
+- `-p`：使用 Pro 模型。
 
-- 確認目標檔案存在
-- 透過 `MZ` 與 `PE` 標頭判斷是否為 PE 檔案，非 PE 檔案直接擲回 `NotSupportedException`
+不傳模型參數時預設使用 Standard。
 
-### 3. 特徵提取
-
-Standard 模式提取 **299 維**特徵（`FileFeatures.FeatureCount = 299`），包含位元組統計、熵、PE 佈局、節區、匯入/匯出和標頭衍生訊號。Flash 模式提取 **68 維**快速頭尾特徵。Pro 模式使用混合特徵向量：
-
-- Standard 特徵：299 維
-- Flash 特徵：68 維
-- PE 結構特徵：32 維
-- Raw 節區位元組：從 Pro 模型 ONNX `Features` 輸入維度動態推導
-
-Pro 路徑會根據載入的 `Xdows-Model-Pro.onnx` 中繼資料推導每個節區使用的 raw 位元組數。更新 Maker、Invoker 或 Native 行為時不要硬編碼固定的 Pro 特徵長度；重新訓練後的 Pro 模型可以攜帶不同但合法的 `Features` 維度。
-
-| 特徵類別 | 維度 | 說明 |
-|----------|------|------|
-| 位元組頻率 | 256 | 每個位元組值（0x00–0xFF）在檔案中的出現頻率 |
-| 檔案大小 | 1 | 對數轉換 `log(fileSize + 1)` |
-| 全域熵 | 1 | 整個檔案的 Shannon 熵 |
-| 分塊熵統計 | 8 | 最小/最大/平均/方差、最小/最大熵塊位置、首/末塊熵 |
-| 位元組分佈 | 5 | 唯一位元組數、最常見位元組及其占比、最不常見位元組及其占比 |
-| 字元比例 | 5 | 可列印字元、控制字元、空白字元、字母、數字 |
-| 零位元組/高熵特徵 | 2 | 零位元組占比、高熵區塊占比 |
-| 擴展位元組與連續段統計 | 16 | 位元組平均/方差、分佈偏度/峰度、零/非零連續段數量與長度、低位元組/可列印 ASCII/擴展 ASCII 占比 |
-| PE 標頭摘要 | 4 | 節區數、時間戳、特徵標誌、可選標頭 magic |
-| 標頭分塊熵摘要 | 4 | 檔案標頭區域熵的最小值、最大值、平均值和方差 |
-
-### 4. ONNX 推理
-
-- 輸入：`Features` 與 `Label`（布林標籤占位）。Standard 使用 299 維，Flash 使用 68 維，Pro 從已載入 ONNX 模型推導維度。
-- 輸出：讀取 `Probability.output`，乘以 100 換算為百分比
-
-### 5. 判定結果
-
-當 `probability >= 90.0f` 時判定為惡意檔案。
-
-## 快速接入（C#）
+## C# 接入
 
 ```csharp
+using Xdows_Model_Config;
 using Xdows_Model_Invoker;
 
-// 初始化模型（不傳路徑時使用預設模型發現策略）
-ModelInvoker.Initialize();
+ModelInvoker.ConfigureThresholds(new TrainingConfig());
+ModelInvoker.InitializePro();
 
-// 掃描檔案
-var (isVirus, probability) = ModelInvoker.ScanFile(@"C:\test\sample.exe");
-Console.WriteLine($"IsVirus: {isVirus}, Probability: {probability:F2}%");
+var (isVirus, probability) = ModelInvoker.ScanFile(@"C:\Samples\app.exe");
 
-// 釋放模型資源
 ModelInvoker.UnloadModel();
 ```
 
-也可以在掃描時指定模型路徑：
+Standard 使用 `Initialize()`，Flash 使用 `InitializeFlash()`，Pro 使用 `InitializePro()`。也可以向初始化方法傳入自訂 ONNX 路徑。
 
-```csharp
-var (isVirus, probability) = ModelInvoker.ScanFile(@"C:\test\sample.exe", @"C:\models\Xdows-Model.onnx");
+## 訓練與評估
+
+`Xdows-Model-Maker` 是互動式訓練工具。預設樣本目錄來自 `TrainingConfig`：
+
+- 黑樣本：`D:\Code\Model\Files\Black`
+- 白樣本：`D:\Code\Model\Files\White`
+
+訓練選單可選擇 Standard、Flash、Pro 中的一個或多個模型。Pro 訓練會從 `ProExpansionStartBytesPerSection` 開始，按 `ProExpansionFactor` 擴展 raw 位元組視窗，直到達到 `ProExpansionMaxBytesPerSection`、AUC 增益低於閾值或超過耐心步數。
+
+批次評估範例：
+
+```powershell
+dotnet run --project D:\Code\Xdows-Model\Xdows-Model-Evaluator -- --mode all --limit 700 --csv hard-cases.csv
 ```
 
-## 訓練流程
+常用參數：
 
-使用 `Xdows-Model-Maker` 訓練模型：
+- `--mode all|standard|flash|pro`
+- `--black <folder>`
+- `--white <folder>`
+- `--limit <n>`
+- `--csv <path>`
+- `--standard-model <path>`
+- `--flash-model <path>`
+- `--pro-model <path>`
 
-1. **準備樣本**：將黑樣本放入 `Black` 目錄，白樣本放入 `White` 目錄
-2. **清洗資料**：執行 Maker 選擇「清洗非PE檔案」，自動刪除非 PE 格式的樣本
-3. **訓練模型**：選擇「訓練模型」，程式將自動完成以下步驟：
-   - 並行載入所有樣本並提取特徵
-   - 按 80/20 比例劃分訓練集與測試集
-   - 訓練 LightGBM 二分類模型
-   - 輸出評估指標（準確率、AUC、AUPRC、F1 分數、混淆矩陣）
-   - 儲存 ML.NET 模型（`.zip`）與 ONNX 模型（`.onnx`）
+## 與 Xdows Security 的關係
 
-### 訓練設定
+Xdows Security 主程式不在驅動裡執行 .NET 模型，也不透過驅動啟動命令列掃描器。驅動防護路徑由主程式載入 `Xdows-Model-Native.dll`，再由原生執行階段呼叫 ONNX Runtime 完成本機推理。
 
-| 參數 | 預設值 | 說明 |
-|------|--------|------|
-| LearningRate | 0.1 | 學習率 |
-| NumberOfLeaves | 31 | 葉節點數 |
-| MinimumExampleCountPerLeaf | 20 | 葉節點最小樣本數 |
-| NumberOfIterations | 400 | 迭代次數 |
-| RandomSeed | 42 | 隨機種子 |
+發佈 Xdows Security 時，應用輸出應包含：
 
-## 依賴
-
-- **.NET 10.0**
-- [Microsoft.ML](https://www.nuget.org/packages/Microsoft.ML/) 5.0.0
-- [Microsoft.ML.OnnxRuntime](https://www.nuget.org/packages/Microsoft.ML.OnnxRuntime/) 1.26.0
-- [Microsoft.ML.LightGBM](https://www.nuget.org/packages/Microsoft.ML.LightGBM/) 5.0.0（僅 Maker）
-
-## 適用場景
-
-- 在防毒/安全工具中提供本地靜態檔案預篩
-- 在樣本分析流程中作為第一層風險評分
-- 與簽名檢測、行為檢測組合為多引擎策略
+- `Xdows-Model.onnx`
+- `Xdows-Model-Flash.onnx`
+- `Xdows-Model-Pro.onnx`
+- `Xdows-Model-Native.dll`
+- `onnxruntime.dll`
+- `onnxruntime_providers_shared.dll`
 
 ## 注意事項
 
-- 目前推理流程僅支援 **PE 檔案**，非 PE 檔案會被拒絕
-- `90%` 閾值是業務策略值，建議依實際樣本集校準
-- 生產環境建議補充：掃描逾時控制、模型版本管理、日誌與稽核
-- 專案基於 MIT 協議開源
+- 不要提交真實惡意樣本到倉庫。
+- 更新 Pro 訓練或推理時，不要把 Pro 特徵長度寫死為某個固定值。
+- 閾值是業務策略，不是模型本身的一部分；發佈前應使用目標樣本集重新評估。
+- 原生執行階段和託管 Invoker 應保持同一套模型檔案、特徵契約和閾值設定。
