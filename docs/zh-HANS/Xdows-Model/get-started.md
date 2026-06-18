@@ -5,8 +5,6 @@ description: Xdows Model 是 Xdows Security 使用的本地恶意文件模型仓
 
 # Xdows Model
 
-> 项目仓库：<https://github.com/XTY64XTY/Xdows-Model>
-
 Xdows Model 是 Xdows Security 的本地静态扫描模型仓库。它使用 ML.NET LightGBM 训练模型，使用 ONNX Runtime 执行推理，并提供托管调用库、命令行调用器、评估工具和供 Xdows Security 驱动防护路径调用的原生运行时。
 
 ## 模型模式

@@ -5,8 +5,6 @@ description: Xdows Model is the local malicious-file model repository used by Xd
 
 # Xdows Model
 
-> Repository: <https://github.com/XTY64XTY/Xdows-Model>
-
 Xdows Model is the local static scanning model repository for Xdows Security. It trains models with ML.NET LightGBM, runs inference with ONNX Runtime, and provides a managed invoker, a command-line caller, an evaluator, and a native runtime used by the Xdows Security driver-protection path.
 
 ## Model Modes

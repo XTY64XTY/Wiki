@@ -5,8 +5,6 @@ description: Xdows Model 是 Xdows Security 使用的本機惡意檔案模型倉
 
 # Xdows Model
 
-> 專案倉庫：<https://github.com/XTY64XTY/Xdows-Model>
-
 Xdows Model 是 Xdows Security 的本機靜態掃描模型倉庫。它使用 ML.NET LightGBM 訓練模型，使用 ONNX Runtime 執行推理，並提供託管呼叫庫、命令列呼叫器、評估工具和供 Xdows Security 驅動防護路徑呼叫的原生執行階段。
 
 ## 模型模式
