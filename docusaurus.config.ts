@@ -3,7 +3,7 @@ import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import { sidebarData, filterSidebarItems, detectLocale } from './sidebar-data';
 
-const SITE_URL = 'https://xty64xty.netlify.app';
+const SITE_URL = 'https://docs.xiguastudio.top/';
 const EDIT_REPO = 'https://github.com/XTY64XTY/Wiki/edit/main';
 
 const config: Config = {
