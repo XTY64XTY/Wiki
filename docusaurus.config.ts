@@ -153,12 +153,18 @@ const config: Config = {
         src: 'logo.ico',
       },
       items: [
-        { to: '/', label: 'Home', position: 'left', activeBaseRegex: '^/(zh-Hans|zh-Hant|en)?/?$', },
         {
-          type: 'doc',
-          docId: 'Xdows-Security-5/get-started',
-          label: 'Getting Started',
+          type: 'custom-locale-navbar-item',
           position: 'left',
+          labelKey: 'home',
+          to: '/',
+          activeBaseRegex: '^/(zh-Hans|zh-Hant|en)?/?$',
+        },
+        {
+          type: 'custom-locale-navbar-item',
+          position: 'left',
+          labelKey: 'gettingStarted',
+          docId: 'Xdows-Security-5/get-started',
         },
         {
           type: 'localeDropdown',
