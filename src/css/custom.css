@@ -1,0 +1,307 @@
+/* ================================================================
+   WinUI 3 主题 · Docusaurus
+   令牌与单文件演示页一致;网页无法采样用户壁纸,
+   平面 #F3F3F3 / #202020 即 Mica 的标准降级
+   ================================================================ */
+
+/* ---------- 0. 令牌 ---------- */
+:root {
+  /* WinUI 自定义令牌 */
+  --winui-accent: #0067c0;
+  --winui-accent-hover: #1975c5;
+  --winui-accent-pressed: #005fb4;
+  --winui-on-accent: #fff;
+  --winui-on-accent-dim: rgba(255,255,255,.6);
+  --winui-stroke: rgba(0,0,0,.06);
+  --winui-stroke-bottom: rgba(0,0,0,.447);   /* 控件"深色底边" */
+  --winui-fill: rgba(255,255,255,.7);
+  --winui-fill-hover: rgba(249,249,249,.5);
+  --winui-fill-pressed: rgba(249,249,249,.3);
+  --winui-subtle: rgba(0,0,0,.0378);
+  --winui-card-border: rgba(0,0,0,.0578);
+  --winui-ease: cubic-bezier(.1,.9,.2,1);
+
+  /* 映射到 Docusaurus(Infima) */
+  --ifm-color-primary: var(--winui-accent);
+  --ifm-color-primary-dark: #005fb4;
+  --ifm-color-primary-darker: #0058a8;
+  --ifm-color-primary-darkest: #004785;
+  --ifm-color-primary-light: #1975c5;
+  --ifm-color-primary-lighter: #2b81ca;
+  --ifm-color-primary-lightest: #4d98d4;
+
+  --ifm-background-color: #f3f3f3;                     /* Mica */
+  --ifm-background-surface-color: #fbfbfb;
+  --ifm-card-background-color: #fbfbfb;
+  --ifm-navbar-background-color: rgba(243,243,243,.72); /* Acrylic */
+
+  --ifm-font-family-base: "Segoe UI Variable Text","Segoe UI Variable","Segoe UI",
+    system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  --ifm-heading-font-family: "Segoe UI Variable Display","Segoe UI Variable","Segoe UI",
+    system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+  --ifm-heading-font-weight: 600;
+  --ifm-h1-font-size: 2.35rem;
+  --ifm-h2-font-size: 1.65rem;
+  --ifm-h3-font-size: 1.3rem;
+
+  --ifm-border-radius: 4px;          /* 控件 4px */
+  --ifm-card-border-radius: 8px;     /* 卡片 8px */
+  --ifm-code-border-radius: 4px;
+  --ifm-button-border-radius: 4px;
+  --ifm-alert-border-radius: 4px;
+  --ifm-navbar-height: 56px;
+
+  --ifm-global-shadow-lw: 0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.14);
+  --ifm-global-shadow-md: 0 0 2px rgba(0,0,0,.12),0 4px 8px rgba(0,0,0,.14);
+  --ifm-global-shadow-tl: 0 0 2px rgba(0,0,0,.12),0 8px 16px rgba(0,0,0,.14);
+
+  --ifm-table-border-color: var(--winui-stroke);
+}
+
+[data-theme='dark'] {
+  --winui-accent: #60cdff;
+  --winui-accent-hover: #78d7ff;
+  --winui-accent-pressed: #4eb2e6;
+  --winui-on-accent: #000;           /* 深色强调色必须配黑字 */
+  --winui-on-accent-dim: rgba(0,0,0,.6);
+  --winui-stroke: rgba(255,255,255,.0698);
+  --winui-stroke-bottom: rgba(255,255,255,.45);
+  --winui-fill: rgba(255,255,255,.0605);
+  --winui-fill-hover: rgba(255,255,255,.0837);
+  --winui-fill-pressed: rgba(255,255,255,.0326);
+  --winui-subtle: rgba(255,255,255,.0605);
+  --winui-card-border: rgba(255,255,255,.0698);
+
+  --ifm-color-primary: var(--winui-accent);
+  --ifm-color-primary-dark: #47c3ff;
+  --ifm-color-primary-darker: #2eb9ff;
+  --ifm-color-primary-darkest: #14afff;
+  --ifm-color-primary-light: #79d7ff;
+  --ifm-color-primary-lighter: #92e1ff;
+  --ifm-color-primary-lightest: #abebff;
+
+  --ifm-background-color: #202020;
+  --ifm-background-surface-color: #2b2b2b;
+  --ifm-card-background-color: #2b2b2b;
+  --ifm-navbar-background-color: rgba(32,32,32,.85);
+}
+
+/* ---------- 1. 导航栏 = Acrylic ---------- */
+.navbar {
+  backdrop-filter: blur(30px) saturate(1.6);
+  -webkit-backdrop-filter: blur(30px) saturate(1.6);
+  box-shadow: 0 0 2px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);  /* 轻阴影增强可见性 */
+  border-bottom: 1px solid var(--winui-stroke);
+}
+.navbar__link {
+  border-radius: 4px;
+  padding: 6px 12px;
+  margin: 0 2px;
+  font-size: 13.5px;
+  transition: background .15s var(--winui-ease);
+}
+.navbar__link:hover { background: var(--winui-subtle); color: var(--ifm-font-color-base); }
+.navbar__link--active { background: var(--winui-subtle); font-weight: 600; }
+.navbar__title { font-weight: 600; }
+
+/* ---------- 2. 侧边栏 = NavigationView ---------- */
+.menu__link {
+  border-radius: 4px;
+  font-size: 13.5px;
+  transition: background .15s var(--winui-ease);
+}
+.menu__link:hover { background: var(--winui-subtle); }
+.menu__link--active {
+  position: relative;
+  background: var(--winui-subtle);
+  font-weight: 600;
+}
+/* 选中项左侧胶囊指示条,悬停伸长 */
+.menu__link--active::before {
+  content: "";
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 16px; border-radius: 2px;
+  background: var(--ifm-color-primary);
+  transition: height .3s var(--winui-ease);
+}
+.menu__link--active:hover::before { height: 22px; }
+.menu__link--sublist { font-size: 12px; letter-spacing: .06em; }
+
+/* ---------- 3. 按钮 = WinUI Button(灵魂:深色底边) ---------- */
+.button {
+  background: var(--winui-fill);
+  color: var(--ifm-font-color-base);
+  border: 1px solid var(--winui-stroke);
+  border-bottom-color: var(--winui-stroke-bottom);
+  font-weight: 400;
+  transition: background .15s var(--winui-ease),color .15s,border-color .15s;
+}
+.button:hover { background: var(--winui-fill-hover); color: var(--ifm-font-color-base); }
+.button:active {
+  background: var(--winui-fill-pressed);
+  border-bottom-color: var(--winui-stroke);      /* 按下:底边消失 */
+  color: var(--ifm-color-emphasis-600);
+  transform: none;
+}
+.button--primary {
+  background: var(--winui-accent);
+  color: var(--winui-on-accent);
+  border-color: rgba(0,0,0,.14);
+  border-bottom-color: rgba(0,0,0,.4);
+}
+.button--primary:hover { background: var(--winui-accent-hover); color: var(--winui-on-accent); }
+.button--primary:active { background: var(--winui-accent-pressed); color: var(--winui-on-accent-dim); }
+[data-theme='dark'] .button--primary { border-color: transparent; }
+.button--outline {
+  background: transparent;
+  border-color: var(--winui-stroke);
+  border-bottom-color: var(--winui-stroke-bottom);
+  color: var(--ifm-font-color-base);
+}
+.button--outline:hover { background: var(--winui-subtle); color: var(--ifm-font-color-base); }
+
+/* ---------- 4. 提示块 = InfoBar 四态 ---------- */
+.admonition.alert {
+  border: 1px solid var(--winui-stroke);
+  box-shadow: none;
+  color: var(--ifm-font-color-base);             /* 正文用常规文字色 */
+}
+.admonition h5 { color: var(--ifm-alert-foreground-color); }
+.admonition-icon svg {
+  fill: var(--ifm-alert-foreground-color);
+  stroke: var(--ifm-alert-foreground-color);
+}
+.alert--secondary, .alert--info { --ifm-alert-background-color:#d6e9f8; --ifm-alert-foreground-color:#0067c0; }
+.alert--success                 { --ifm-alert-background-color:#dff6dd; --ifm-alert-foreground-color:#0f7b0f; }
+.alert--warning                 { --ifm-alert-background-color:#fff4ce; --ifm-alert-foreground-color:#9d5d00; }
+.alert--danger                  { --ifm-alert-background-color:#fde7e9; --ifm-alert-foreground-color:#c42b1c; }
+
+[data-theme='dark'] .alert--secondary,
+[data-theme='dark'] .alert--info  { --ifm-alert-background-color:#34424d; --ifm-alert-foreground-color:#60cdff; }
+[data-theme='dark'] .alert--success{ --ifm-alert-background-color:#393d1b; --ifm-alert-foreground-color:#6ccb5f; }
+[data-theme='dark'] .alert--warning{ --ifm-alert-background-color:#433519; --ifm-alert-foreground-color:#fce100; }
+[data-theme='dark'] .alert--danger { --ifm-alert-background-color:#442726; --ifm-alert-foreground-color:#ff99a4; }
+
+/* ---------- 5. 代码 ---------- */
+:not(pre) > code {
+  background: var(--winui-subtle);
+  border: none;
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-family: "Cascadia Code",Consolas,"Courier New",monospace;
+  font-size: .85em;
+}
+div[class*='codeBlockContainer'] {
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+
+/* ---------- 6. 表格(DataGrid 感) ---------- */
+.markdown table { font-size: 13.5px; }
+.markdown thead th {
+  border-bottom-color: var(--winui-stroke-bottom);
+  font-size: 12px;
+  color: var(--ifm-color-emphasis-700);
+}
+.markdown tbody tr { transition: background .12s var(--winui-ease); }
+.markdown tbody tr:hover { background: var(--winui-subtle); }
+
+/* ---------- 7. 标签页 = WinUI TabView(底部胶囊指示条) ---------- */
+.tabs { border-bottom: 1px solid var(--winui-stroke); font-weight: 400; }
+.tabs__item {
+  position: relative;
+  border-radius: 4px;
+  padding: 8px 14px;
+  border-bottom: none;
+  transition: background .15s var(--winui-ease);
+}
+.tabs__item:hover { background: var(--winui-subtle); }
+.tabs__item--active { background: none; color: var(--ifm-font-color-base); font-weight: 600; }
+.tabs__item--active::after {
+  content: "";
+  position: absolute; left: 12px; right: 12px; bottom: 0; height: 3px;
+  border-radius: 2px;
+  background: var(--ifm-color-primary);
+}
+
+/* ---------- 8. 卡片与翻页 ---------- */
+.card, .pagination-nav__link {
+  border: 1px solid var(--winui-card-border);
+  border-radius: 8px;
+  box-shadow: var(--ifm-global-shadow-lw);
+  transition: transform .18s var(--winui-ease),box-shadow .18s var(--winui-ease),border-color .18s;
+}
+.card:hover, .pagination-nav__link:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ifm-global-shadow-md);
+  border-color: var(--ifm-color-primary);
+}
+
+/* ---------- 9. 页脚 / TOC ---------- */
+.footer { border-top: 1px solid var(--winui-stroke); }
+.footer--dark { background: transparent; }
+.table-of-contents__link { font-size: 13px; }
+.table-of-contents__link--active { font-weight: 600; }
+
+/* ---------- 10. 系统级细节:焦点环 / 选中色 / Win11 滚动条 ---------- */
+:focus-visible { outline: 2px solid var(--ifm-color-primary); outline-offset: 2px; }
+::selection { background: rgba(0,103,192,.28); }
+[data-theme='dark'] ::selection { background: rgba(96,205,255,.32); }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.32);
+  border-radius: 5px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+[data-theme='dark'] *::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,.32); }
+
+/* ---------- 11. LinkCard(VitePress 风格链接卡片) ---------- */
+.linkcard {
+  display: block;
+  margin: 16px 0;
+  border-radius: 8px;
+  border: 1px solid var(--winui-card-border);
+  background-color: var(--ifm-card-background-color);
+  box-shadow: var(--ifm-global-shadow-lw);
+  overflow: hidden;
+  transition: border-color .18s var(--winui-ease), box-shadow .18s var(--winui-ease);
+}
+.linkcard:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: var(--ifm-global-shadow-md);
+}
+.linkcard > a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: inherit;
+}
+.linkcard .description {
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.linkcard .description span {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ifm-color-emphasis-600);
+  word-break: break-all;
+}
+.linkcard .logo {
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+.linkcard .logo img {
+  display: block;
+  border-radius: 6px;
+}
+
