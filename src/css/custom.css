@@ -1,8 +1,8 @@
 /* ================================================================
-   WinUI 3 主题 · Docusaurus
-   令牌与单文件演示页一致;网页无法采样用户壁纸,
-   平面 #F3F3F3 / #202020 即 Mica 的标准降级
-   ================================================================ */
+WinUI 3 主题 · Docusaurus
+令牌与单文件演示页一致;网页无法采样用户壁纸,
+平面 #F3F3F3 / #202020 即 Mica 的标准降级
+================================================================ */
 
 /* ---------- 0. 令牌 ---------- */
 :root {
@@ -20,6 +20,11 @@
   --winui-subtle: rgba(0,0,0,.0378);
   --winui-card-border: rgba(0,0,0,.0578);
   --winui-ease: cubic-bezier(.1,.9,.2,1);
+  /* Hyperlink(官方 common_themeresources_any.xaml → HyperlinkFillColor)
+     浅色 = SystemAccentColor Dark1/Dark2/Dark3,悬停/按下逐级变深 */
+  --winui-link: #0067c0;
+  --winui-link-hover: #0058a8;
+  --winui-link-pressed: #004785;
 
   /* 映射到 Docusaurus(Infima) */
   --ifm-color-primary: var(--winui-accent);
@@ -29,35 +34,29 @@
   --ifm-color-primary-light: #1975c5;
   --ifm-color-primary-lighter: #2b81ca;
   --ifm-color-primary-lightest: #4d98d4;
-
   --ifm-background-color: #f3f3f3;                     /* Mica */
   --ifm-background-surface-color: #fbfbfb;
   --ifm-card-background-color: #fbfbfb;
   --ifm-navbar-background-color: rgba(243,243,243,.72); /* Acrylic */
-
-  --ifm-font-family-base: "Segoe UI Variable Text","Segoe UI Variable","Segoe UI",
-    system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
-  --ifm-heading-font-family: "Segoe UI Variable Display","Segoe UI Variable","Segoe UI",
-    system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+  --ifm-font-family-base: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI",
+    system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --ifm-heading-font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI",
+    system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
   --ifm-heading-font-weight: 600;
   --ifm-h1-font-size: 2.35rem;
   --ifm-h2-font-size: 1.65rem;
   --ifm-h3-font-size: 1.3rem;
-
   --ifm-border-radius: 4px;          /* 控件 4px */
   --ifm-card-border-radius: 8px;     /* 卡片 8px */
   --ifm-code-border-radius: 4px;
   --ifm-button-border-radius: 4px;
   --ifm-alert-border-radius: 4px;
   --ifm-navbar-height: 56px;
-
   --ifm-global-shadow-lw: 0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.14);
   --ifm-global-shadow-md: 0 0 2px rgba(0,0,0,.12),0 4px 8px rgba(0,0,0,.14);
   --ifm-global-shadow-tl: 0 0 2px rgba(0,0,0,.12),0 8px 16px rgba(0,0,0,.14);
-
   --ifm-table-border-color: var(--winui-stroke);
 }
-
 [data-theme='dark'] {
   --winui-accent: #60cdff;
   --winui-accent-hover: #78d7ff;
@@ -71,6 +70,10 @@
   --winui-fill-pressed: rgba(255,255,255,.0326);
   --winui-subtle: rgba(255,255,255,.0605);
   --winui-card-border: rgba(255,255,255,.0698);
+  /* Hyperlink(深色 = SystemAccentColor Light2/Light3,悬停/按下逐级变亮) */
+  --winui-link: #60cdff;
+  --winui-link-hover: #92e1ff;
+  --winui-link-pressed: #abebff;
 
   --ifm-color-primary: var(--winui-accent);
   --ifm-color-primary-dark: #47c3ff;
@@ -79,19 +82,28 @@
   --ifm-color-primary-light: #79d7ff;
   --ifm-color-primary-lighter: #92e1ff;
   --ifm-color-primary-lightest: #abebff;
-
   --ifm-background-color: #202020;
   --ifm-background-surface-color: #2b2b2b;
   --ifm-card-background-color: #2b2b2b;
   --ifm-navbar-background-color: rgba(32,32,32,.85);
 }
 
-/* ---------- 1. 导航栏 = Acrylic ---------- */
+/* ---------- 1. 导航栏 = Acrylic ----------
+修复:backdrop-filter 与 transform/filter 一样,会为 position:fixed 后代建立包含块,
+困住渲染在 .navbar 内部的的 .navbar-sidebar(移动端抽屉),导致其无法正常展开。
+故 blur 仅桌面端启用;移动端改用不透明 Mica 底。 */
 .navbar {
-  backdrop-filter: blur(30px) saturate(1.6);
-  -webkit-backdrop-filter: blur(30px) saturate(1.6);
   box-shadow: 0 0 2px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);  /* 轻阴影增强可见性 */
   border-bottom: 1px solid var(--winui-stroke);
+}
+@media (min-width: 997px) {
+  .navbar {
+    backdrop-filter: blur(30px) saturate(1.6);
+    -webkit-backdrop-filter: blur(30px) saturate(1.6);
+  }
+}
+@media (max-width: 996px) {
+  .navbar { background-color: var(--ifm-background-color); }  /* 不透明 Mica */
 }
 .navbar__link {
   border-radius: 4px;
@@ -104,8 +116,6 @@
 .navbar__link--active { background: var(--winui-subtle); font-weight: 600; }
 .navbar__title { font-weight: 600; }
 
-/* GitHub 图标(补回被删样式;<a> 无内容,需 ::before 注入图标)
-   !important: 覆盖导致 .header-github-link display:none 的规则 */
 .navbar__link.header-github-link {
   display: inline-flex !important;
   align-items: center;
@@ -119,9 +129,9 @@
   content: "";
   width: 20px;
   height: 20px;
-  background-color: var(--ifm-font-color-base);   /* 加深:用正文色替代 emphasis-600,深浅色都清晰 */
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") center/contain no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") center/contain no-repeat;
+  background-color: var(--ifm-font-color-base);
+  -webkit-mask:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") center/contain no-repeat;
   transition: background-color .15s var(--winui-ease);
 }
 .navbar__link.header-github-link:hover { background: var(--winui-subtle); }
@@ -183,35 +193,119 @@
 }
 .button--outline:hover { background: var(--winui-subtle); color: var(--ifm-font-color-base); }
 /* Infima 默认给 .button--secondary 设了 color: var(--ifm-color-gray-900),
-   该变量在深色模式下仍是深色(#1c1e21),导致深色背景上文字不可读——覆盖回常规文字色。
-   注:深色样式表 default-dark.css 也重新设了这个值,需用 [data-theme='dark'] 提优先级 */
+该变量在深色模式下仍是深色(#1c1e21),导致深色背景上文字不可读——覆盖回常规文字色。
+注:深色样式表 default-dark.css 也重新设了这个值,需用 [data-theme='dark'] 提优先级 */
 .button.button--secondary,
 .button.button--secondary:hover { color: var(--ifm-font-color-base); }
 [data-theme='dark'] .button.button--secondary,
 [data-theme='dark'] .button.button--secondary:hover { color: var(--ifm-font-color-base); }
 
-/* ---------- 4. 提示块 = InfoBar 四态 ---------- */
-.admonition.alert {
-  border: 1px solid var(--winui-stroke);
+/* ---------- 4. 提示块 = WinUI InfoBar ----------
+核对自 microsoft-ui-xaml(GitHub 源):
+  controls/dev/InfoBar/InfoBar_themeresources.xaml
+  controls/dev/CommonStyles/Common_themeresources_any.xaml
+  标题/正文 = TextFillColorPrimary(常规色,不染色)
+  图标      = InfoBarIconBackgroundGlyph(F136 圆底) + InfoBar*IconGlyph(符号) 双层叠加
+            圆底 = SystemFillColor*Brush(饱和色);符号 = TextFillColorInverseBrush(浅白/深黑)
+  边框      = CardStrokeColorDefaultBrush(1px,四边等宽,无加厚左边框)
+  背景      = SystemFillColor*BackgroundBrush(淡彩;Informational = AttentionBackground,极淡灰)
+Docusaurus 默认 SVG 是线条风格,与官方实心字形不符,故隐藏后用 mask 绘制
+简洁白色符号(i/✓/!/✕)近似 Segoe Fluent Icons 字形。 */
+/* 容器:Docusaurus 实际输出类名 theme-admonition + alert + alert--*(无单独 .admonition 类);
+   内部子元素为 CSS module 哈希(admonitionIcon_xxx 等),用 [class*=] 匹配稳定前缀。
+   布局核对自 InfoBar_themeresources.xaml:
+     InfoBarMinHeight=48 | ContentRootPadding=16,0,0,0 | IconMargin=0,16,14,16
+     IconFontSize=16(字形大小,非圆底外径) | Title=14px SemiBold,上14 */
+.theme-admonition.alert {
+  position: relative;
+  --ifm-alert-border-left-width: 0;            /* 移除 Infima 默认 5px 加厚左边框 */
+  min-height: 48px;                            /* InfoBarMinHeight */
+  padding: 0 16px 0 46px;                       /* ContentRootPadding:左16,右16;左预留图标位 */
+  background-color: var(--ifm-card-background-color);
+  border: 1px solid var(--winui-card-border) !important;
+  border-radius: 4px;
   box-shadow: none;
-  color: var(--ifm-font-color-base);             /* 正文用常规文字色 */
+  color: var(--ifm-font-color-base);
 }
-.admonition h5 { color: var(--ifm-alert-foreground-color); }
-.admonition-icon svg {
-  fill: var(--ifm-alert-foreground-color);
-  stroke: var(--ifm-alert-foreground-color);
+/* 图标:官方 = 16px Segoe Fluent Icons 字形(InfoBarIconFontSize),
+   圆底(F136) + 符号(F13D-F) 合一,用 mask 模拟:圆底=饱和色全圆,符号=反色镂空。
+   这里用"饱和圆底 + 反色符号 mask"近似:圆底直径=16px(字形大小)。 */
+.theme-admonition [class*="admonitionIcon"] {
+  position: absolute;
+  left: 16px;                                  /* ContentRootPadding 左 16 */
+  top: 16px;                                   /* IconMargin 上 16 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;                                 /* InfoBarIconFontSize = 16 */
+  height: 16px;
+  margin: 0 14px 0 0;                          /* IconMargin 右 14(下16无意义,absolute) */
+  padding: 0;
+  border-radius: 50%;
+  background-color: var(--ifm-alert-foreground-color);
 }
-.alert--secondary, .alert--info { --ifm-alert-background-color:#d6e9f8; --ifm-alert-foreground-color:#0067c0; }
-.alert--success                 { --ifm-alert-background-color:#dff6dd; --ifm-alert-foreground-color:#0f7b0f; }
-.alert--warning                 { --ifm-alert-background-color:#fff4ce; --ifm-alert-foreground-color:#9d5d00; }
-.alert--danger                  { --ifm-alert-background-color:#fde7e9; --ifm-alert-foreground-color:#c42b1c; }
-
-[data-theme='dark'] .alert--secondary,
-[data-theme='dark'] .alert--info  { --ifm-alert-background-color:#34424d; --ifm-alert-foreground-color:#60cdff; }
-[data-theme='dark'] .alert--success{ --ifm-alert-background-color:#393d1b; --ifm-alert-foreground-color:#6ccb5f; }
-[data-theme='dark'] .alert--warning{ --ifm-alert-background-color:#433519; --ifm-alert-foreground-color:#fce100; }
-[data-theme='dark'] .alert--danger { --ifm-alert-background-color:#442726; --ifm-alert-foreground-color:#ff99a4; }
-
+.theme-admonition [class*="admonitionIcon"] svg { display: none; }   /* 隐藏 Docusaurus 线条 SVG */
+.theme-admonition [class*="admonitionIcon"]::after {
+  content: "";
+  display: block;
+  width: 12px; height: 12px;                   /* 符号略小于圆底,符合官方字形比例 */
+  background-color: #fff;                        /* TextFillColorInverse (Light = #FFFFFF) */
+  -webkit-mask-image: var(--icon-url);
+  mask-image: var(--icon-url);
+  -webkit-mask-size: contain;  mask-size: contain;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+[data-theme='dark'] .theme-admonition [class*="admonitionIcon"]::after {
+  background-color: #000;                        /* TextFillColorInverse (Dark = #E4000000) */
+}
+/* 标题行:InfoBarTitleHorizontalOrientationMargin=0,14,0,0 → 上14 */
+.theme-admonition [class*="admonitionHeading"] {
+  margin: 14px 0 0;                            /* 上14 */
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+  text-transform: none;
+  line-height: 20px;                           /* 与图标垂直居中对齐基线 */
+}
+/* 正文:与标题同一左边距(Docusaurus 纵向堆叠,非官方横向同行布局,故不缩进) */
+.theme-admonition [class*="admonitionContent"] {
+  margin: 0;
+  font-size: 14px;                             /* InfoBarMessageFontSize */
+  color: var(--ifm-font-color-base);
+}
+.theme-admonition [class*="admonitionContent"] > :first-child { margin-top: 0; }
+.theme-admonition [class*="admonitionContent"] > :last-child { margin-bottom: 14px; }
+/* 各严重性:饱和色(图标圆底) + 淡彩底(背景) + 符号 mask(i/✓/!/✕) */
+.theme-admonition.alert--secondary,
+.theme-admonition.alert--info {
+  --ifm-alert-foreground-color: #0067c0;      /* SystemFillColorAttention = SystemAccentColor */
+  background-color: rgba(246,246,246,.5);     /* SystemFillColorAttentionBackground = #80F6F6F6 */
+  --icon-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 7h2v2h-2zm0 4h2v6h-2z'/%3E%3C/svg%3E");
+}
+.theme-admonition.alert--success {
+  --ifm-alert-foreground-color: #0f7b0f;      /* SystemFillColorSuccess */
+  background-color: #dff6dd;                  /* SystemFillColorSuccessBackground */
+  --icon-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+}
+.theme-admonition.alert--warning {
+  --ifm-alert-foreground-color: #9d5d00;      /* SystemFillColorCaution */
+  background-color: #fff4ce;                  /* SystemFillColorCautionBackground */
+  --icon-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 5h2v10h-2zM11 17h2v2h-2z'/%3E%3C/svg%3E");
+}
+.theme-admonition.alert--danger {
+  --ifm-alert-foreground-color: #c42b1c;      /* SystemFillColorCritical */
+  background-color: #fde7e9;                  /* SystemFillColorCriticalBackground */
+  --icon-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
+}
+[data-theme='dark'] .theme-admonition.alert--secondary,
+[data-theme='dark'] .theme-admonition.alert--info {
+  --ifm-alert-foreground-color: #60cdff;      /* SystemFillColorAttention = SystemAccentColorLight2 */
+  background-color: rgba(255,255,255,.031);   /* SystemFillColorAttentionBackground = #08FFFFFF */
+}
+[data-theme='dark'] .theme-admonition.alert--success { --ifm-alert-foreground-color: #6ccb5f; background-color: #393d1b; }
+[data-theme='dark'] .theme-admonition.alert--warning { --ifm-alert-foreground-color: #fce100; background-color: #433519; }
+[data-theme='dark'] .theme-admonition.alert--danger  { --ifm-alert-foreground-color: #ff99a4; background-color: #442726; }
 /* ---------- 5. 代码 ---------- */
 :not(pre) > code {
   background: var(--winui-subtle);
@@ -236,25 +330,83 @@ div[class*='codeBlockContainer'] {
 .markdown tbody tr { transition: background .12s var(--winui-ease); }
 .markdown tbody tr:hover { background: var(--winui-subtle); }
 
-/* ---------- 7. 标签页 = WinUI TabView(底部胶囊指示条) ---------- */
-.tabs { border-bottom: 1px solid var(--winui-stroke); font-weight: 400; }
+/* ---------- 7. 标签页 = WinUI SelectorBar ----------
+核对自 microsoft-ui-xaml(GitHub):
+  controls/dev/SelectorBar/SelectorBar_themeresources.xaml
+  选中态 = 底部 pill 指示条(SelectorBarItemPillFill=AccentFillColorDefault,
+            PillHeight=3) + 文字保持 TextFillColorPrimary(不灰化)
+  未选中 = 透明背景 + TextFillColorPrimary(SelectorBarItemForeground=Primary,非灰)
+  hover  = TextFillColorSecondary | pressed = TextFillColorTertiary
+  容器   = 透明背景,无底边框 | ItemPadding=12,10,12,7 | ItemSpacing=8 */
+.tabs { border-bottom: none; font-weight: 400; gap: 8px; }  /* ItemSpacing=8 */
 .tabs__item {
   position: relative;
-  border-radius: 4px;
-  padding: 8px 14px;
+  border-radius: 0;
+  padding: 8px 12px;                         /* 上下均衡 8px,左右 12px */
   border-bottom: none;
-  transition: background .15s var(--winui-ease);
+  font-size: 14px;                           /* SelectorBar 文字为正文级 14px */
+  color: var(--ifm-font-color-base);         /* TextFillColorPrimary(始终,非灰) */
+  background: transparent;
+  transition: color .15s var(--winui-ease);
 }
-.tabs__item:hover { background: var(--winui-subtle); }
-.tabs__item--active { background: none; color: var(--ifm-font-color-base); font-weight: 600; }
+.tabs__item:hover {
+  background: transparent;
+  color: var(--ifm-color-emphasis-700);      /* TextFillColorSecondary */
+}
+.tabs__item--active {
+  background: transparent;
+  color: var(--ifm-font-color-base);         /* TextFillColorPrimarySelected(保持原色) */
+  font-weight: 600;
+}
+/* 选中态:底部 pill 指示条(PillHeight=3,固定宽度,展开动画)
+   官方 SelectorBar 指示条为固定窄条(PillWidth),选中时从中心展开 */
+@keyframes tabPillExpand {
+  from { transform: translateX(-50%) scaleX(0); }
+  to   { transform: translateX(-50%) scaleX(1); }
+}
 .tabs__item--active::after {
   content: "";
-  position: absolute; left: 12px; right: 12px; bottom: 0; height: 3px;
-  border-radius: 2px;
-  background: var(--ifm-color-primary);
+  position: absolute;
+  left: 50%;                                 /* 居中定位 */
+  bottom: 0;
+  width: 16px;                               /* 固定宽度(非铺满) */
+  height: 3px;                               /* SelectorBarItemPillHeight */
+  border-radius: 1.5px;                      /* pill 圆角 = 高度/2 */
+  background: var(--winui-accent);           /* SelectorBarItemPillFill = AccentFillColorDefault */
+  transform: translateX(-50%);               /* 居中偏移 */
+  transform-origin: center;                  /* 从中心展开 */
+  animation: tabPillExpand .25s var(--winui-ease);  /* 选中时展开 */
 }
+/* ---------- 8. 徽章 = WinUI InfoBadge ----------
+核对自 microsoft-ui-xaml(GitHub):
+  controls/dev/InfoBadge/InfoBadge_themeresources.xaml
+  背景 = *FillColorDefaultBrush(饱和填充) | 文字 = TextOnAccentFillColorPrimary(白/黑)
+  圆角 = pill(MaxHeight 16 → radius 8) | 字号 = InfoBadgeValueFontSize 11px */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;                               /* 文档场景放大(官方 InfoBadgeMaxHeight=16,这里适配正文) */
+  margin: 0 4px;                             /* 左右外边距,与标题/标签文字留白 */
+  padding: 0 8px;                             /* 左右内边距(官方 ValueInfoBadgeTextMargin=4,文档放大到 8) */
+  border-radius: 10px;                        /* pill = 高度/2 */
+  font-size: 12px;                            /* 官方 InfoBadgeValueFontSize=11,文档场景微调到 12 */
+  font-weight: 400;
+  line-height: 20px;
+  color: #fff;                                /* TextOnAccentFillColorPrimary (Light) */
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.badge--tip, .badge--success     { background: #0f7b0f; }   /* SystemFillColorSuccess */
+.badge--warning, .badge--caution { background: #9d5d00; }   /* SystemFillColorCaution */
+.badge--danger, .badge--critical { background: #c42b1c; }   /* SystemFillColorCritical */
+.badge--info, .badge--secondary   { background: var(--winui-accent); } /* AccentFillColorDefault */
+[data-theme='dark'] .badge { color: #000; }  /* TextOnAccentFillColorPrimary (Dark) */
+[data-theme='dark'] .badge--tip, [data-theme='dark'] .badge--success   { background: #6ccb5f; }
+[data-theme='dark'] .badge--warning, [data-theme='dark'] .badge--caution { background: #fce100; }
+[data-theme='dark'] .badge--danger, [data-theme='dark'] .badge--critical { background: #ff99a4; }
+[data-theme='dark'] .badge--info, [data-theme='dark'] .badge--secondary   { background: #60cdff; }
 
-/* ---------- 8. 卡片与翻页 ---------- */
+/* ---------- 9. 卡片与翻页 ---------- */
 .card, .pagination-nav__link {
   border: 1px solid var(--winui-card-border);
   border-radius: 8px;
@@ -287,33 +439,16 @@ div[class*='codeBlockContainer'] {
 }
 [data-theme='dark'] *::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,.32); }
 
-/* 快捷键 kbd = WinUI 键帽
-   键帽三要素:4px 圆角 + 微妙填充 + 更粗的深色底边(模拟按键深度);
-   字体用 Segoe UI Variable(Windows 键帽原生字体),不用等宽字体 */
-.navbar__search kbd {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;                 /* 单字符键(⌘ / K)不至于过窄 */
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 4px;
-  background-color: var(--winui-subtle);
-  border: 1px solid var(--winui-stroke);
-  border-bottom: 2px solid var(--winui-stroke-bottom);   /* 键帽灵魂:加粗的深色底边 */
-  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--ifm-color-emphasis-600);
-}
-/* 两颗键(⌘ K / Ctrl K)之间的间距 */
-.navbar__search kbd + kbd { margin-left: 3px; }
-/* 深色模式:输入框底色与 subtle 同色,键帽会融进去,提亮一档 */
-[data-theme='dark'] .navbar__search kbd {
-  background-color: rgba(255,255,255,.1);
-}
-
+/* ---------- 11. 搜索框 = WinUI TextBox ----------
+修复:图标着色(覆盖插件硬编码色)+ 聚焦下划线用 ::after + scaleX 展开
+命中依据:
+.navbar__search / .navbar__search-input  稳定类名(探测确认)
+.navbar__search svg / [class*='searchIcon']  图标(span 包裹或直接 svg 两种结构)
+[class*="searchClearButton"]  清除按钮哈希 searchClearButton_qk4g
+.navbar__search kbd           快捷键(探测确认存在)
+[class*="searchResult"]       本地搜索结果弹窗(dev 下不渲染,build 后生效)
+.DocSearch-Button             Algolia 兼容(本站未启用,保留以防切换)
+*/
 /* ① 本地搜索插件(.navbar__search) */
 .navbar__search {
   position: relative;
@@ -324,7 +459,6 @@ div[class*='codeBlockContainer'] {
 .navbar__search:focus-within {
   width: 220px;                 /* 聚焦:容器变宽,输入框 100% 跟随 */
 }
-
 /* 搜索图标 = 放大镜(插件未提供,用 ::before mask 注入,颜色随主题) */
 .navbar__search::before {
   content: "";
@@ -332,22 +466,20 @@ div[class*='codeBlockContainer'] {
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   background-color: var(--ifm-color-emphasis-600);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M9.5 3a6.5 6.5 0 1 0 4.032 11.612l5.428 5.428a1 1 0 0 0 1.414-1.414l-5.428-5.428A6.5 6.5 0 0 0 9.5 3m0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9'/%3E%3C/svg%3E") center/contain no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M9.5 3a6.5 6.5 0 1 0 4.032 11.612l5.428 5.428a1 1 0 0 0 1.414-1.414l-5.428-5.428A6.5 6.5 0 0 0 9.5 3m0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M9.5 3a6.5 6.5 0 1 0 4.032 11.612l5.428 5.428a1 1 0 0 0 1.414-1.414l-5.428-5.428A6.5 6.5 0 0 0 9.5 3m0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9'/%3E%3C/svg%3E") center/contain no-repeat;
   pointer-events: none;
   z-index: 1;
 }
-
 /* 图标颜色 = 次级文字色(兼容 span 包裹或直接 svg 两种结构) */
 .navbar__search svg,
 .navbar__search [class*='searchIcon'] {
   color: var(--ifm-color-emphasis-600);
   fill: currentColor;
 }
-
 .navbar__search-input {
   width: 100% !important;       /* !important: 覆盖插件 CSS Module 的固定宽度(否则塌缩到 43px) */
   height: 32px;
@@ -367,10 +499,9 @@ div[class*='codeBlockContainer'] {
   background: var(--ifm-background-surface-color);
   border-bottom-color: transparent;                  /* 让位给动画下划线 */
 }
-
 /* 聚焦下划线:从中心向两侧展开(scaleX 可动画,box-shadow 不可)
-   宽度 = 展开后宽度(220px) - 2×圆角(4px) = 212px → left/right 各内缩 4px
-   z-index 防被输入框 border 遮挡 */
+宽度 = 展开后宽度(220px) - 2×圆角(4px) = 212px → left/right 各内缩 4px
+z-index 防被输入框 border 遮挡 */
 .navbar__search::after {
   content: "";
   position: absolute;
@@ -385,28 +516,40 @@ div[class*='codeBlockContainer'] {
   z-index: 1;
 }
 .navbar__search:focus-within::after { transform: scaleX(1); }
-
 /* 清除按钮 = 微妙按钮 */
 [class*="searchClearButton"] {
   border-radius: 4px;
   transition: background .15s var(--winui-ease);
 }
 [class*="searchClearButton"]:hover { background: var(--winui-subtle); }
-
-/* 快捷键 kbd = 微妙填充 */
+/* 快捷键 kbd = WinUI 键帽
+键帽三要素:4px 圆角 + 微妙填充 + 更粗的深色底边(模拟按键深度);
+字体用 Segoe UI Variable(Windows 键帽原生字体),不用等宽字体 */
 .navbar__search kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;                 /* 单字符键(⌘ / K)不至于过窄 */
+  height: 20px;
+  padding: 0 6px;
   border-radius: 4px;
-  background: var(--winui-subtle);
+  background-color: var(--winui-subtle);
   border: 1px solid var(--winui-stroke);
-  border-bottom-color: var(--winui-stroke-bottom);
-  font-family: "Cascadia Code", Consolas, monospace;
+  border-bottom: 1px solid var(--winui-stroke-bottom);   /* 键帽灵魂:加粗的深色底边 */
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
   font-size: 11px;
-  padding: 1px 6px;
-  color: var(--ifm-color-emphasis-700);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ifm-color-emphasis-600);
 }
-
+/* 两颗键(⌘ K / Ctrl K)之间的间距 */
+.navbar__search kbd + kbd { margin-left: 3px; }
+/* 深色模式:输入框底色与 subtle 同色,键帽会融进去,提亮一档 */
+[data-theme='dark'] .navbar__search kbd {
+  background-color: rgba(255,255,255,.1);
+}
 /* 本地搜索结果弹窗 = Acrylic 浮层(dev 下不渲染,build 后生效)
-   @easyops-cn/docusaurus-search-local 结果面板类名带哈希,用属性选择器兜底 */
+@easyops-cn/docusaurus-search-local 结果面板类名带哈希,用属性选择器兜底 */
 [class*="searchResult"]:not([class*="searchResultItem"]) {
   border-radius: 8px;
   border: 1px solid var(--winui-card-border);
@@ -421,45 +564,47 @@ div[class*='codeBlockContainer'] {
   transition: background .12s var(--winui-ease);
 }
 [class*="searchResultItem"]:hover { background: var(--winui-subtle); }
-
 [data-theme='dark'] .navbar__search-input {
   background-color: var(--winui-fill);
 }
 [data-theme='dark'] .navbar__search-input:focus {
   background-color: var(--ifm-background-surface-color);
 }
-
 /* ② Algolia DocSearch:图标着色(本站未启用,保留以防切换) */
 .DocSearch-Button .DocSearch-Search-Icon { color: var(--ifm-color-emphasis-600); }
 .DocSearch-Button { --docsearch-muted-color: var(--ifm-color-emphasis-600); }
 
 /* ---------- 12. 编辑此页 = WinUI HyperlinkButton ----------
-   修复:由"微妙按钮"改为 HyperlinkButton(强调色 + 下划线 + 图标),
-        图标仅 color: inherit,不做 transform,抖动根除。
-   命中依据:.theme-edit-this-page 稳定类名(探测确认,文档页存在)
-*/
+官方:HyperlinkButton_themeresources.xaml 只定义画刷、无下划线;
+HyperlinkButton 渲染不带下划线(microsoft-ui-xaml#7000),下划线是 Hyperlink 内联元素的属性。
+  Foreground            = HyperlinkFillColorDefault(--winui-link)
+  BackgroundPointerOver = SubtleFillColorSecondary(--winui-subtle)
+  BackgroundPressed     = SubtleFillColorTertiary(--winui-fill-pressed)
+  BorderPointerOver     = ControlStrokeColorDefault(--winui-stroke,极淡)
+命中依据:.theme-edit-this-page 稳定类名(探测确认,文档页存在) */
 .theme-edit-this-page {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   padding: 5px 10px;
   border-radius: 4px;
+  border: 1px solid transparent;     /* 常驻透明边框,悬停显色时不抖布局 */
   font-size: 13px;
-  color: var(--winui-accent);
-  text-decoration-line: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  text-decoration-color: color-mix(in srgb, var(--winui-accent) 45%, transparent);
-  transition: background .15s var(--winui-ease), color .15s var(--winui-ease), text-decoration-color .15s var(--winui-ease);
+  color: var(--winui-link);
+  text-decoration: none;             /* 官方 HyperlinkButton 无下划线 */
+  transition: background .15s var(--winui-ease), color .15s var(--winui-ease), border-color .15s var(--winui-ease);
+  text-decoration: none;
 }
 .theme-edit-this-page:hover {
-  background: var(--winui-subtle);                    /* HyperlinkButton 悬停:微妙底 + 提亮 */
-  color: var(--winui-accent-hover);
-  text-decoration-color: var(--winui-accent-hover);
+  background: var(--winui-subtle);   /* SubtleFillColorSecondary */
+  border-color: var(--winui-stroke); /* ControlStrokeColorDefault */
+  color: var(--winui-link-hover);
+  text-decoration: none;
 }
 .theme-edit-this-page:active {
   background: var(--winui-fill-pressed);
-  color: var(--winui-accent-pressed);
+  color: var(--winui-link-pressed);
+  text-decoration: none;
 }
 .theme-edit-this-page svg {
   width: 15px; height: 15px;
@@ -467,11 +612,11 @@ div[class*='codeBlockContainer'] {
 }
 
 /* ---------- 13. 语言下拉 = WinUI ComboBox + Acrylic 浮层 ----------
-   命中依据:
-   - .navbar .dropdown > .navbar__link   触发器(探测确认,文本 English)
-   - .dropdown__menu                     浮层(探测确认)
-   - .dropdown__link                     选项(探测确认,含 English/简体中文/繁體中文)
-   - .dropdown__link--active             当前语言(探测确认)
+命中依据:
+.navbar .dropdown > .navbar__link   触发器(探测确认,文本 English)
+.dropdown__menu                     浮层(探测确认)
+.dropdown__link                     选项(探测确认,含 English/简体中文/繁體中文)
+.dropdown__link--active             当前语言(探测确认)
 */
 /* 触发器:对齐 + 悬停微妙填充(基底样式由 .navbar__link:hover 提供,此处补布局) */
 .navbar .dropdown > .navbar__link {
@@ -483,7 +628,6 @@ div[class*='codeBlockContainer'] {
   margin-left: 2px;
   opacity: .7;
 }
-
 /* 浮层 = Acrylic 半透明 + blur + shadow-tl + flyout 动画 */
 .dropdown__menu {
   border-radius: 8px;
@@ -499,7 +643,6 @@ div[class*='codeBlockContainer'] {
 [data-theme='dark'] .dropdown__menu {
   background-color: rgba(43, 43, 43, .82);            /* 深色 Acrylic 底 */
 }
-
 /* 选项 = 4px 圆角 + 悬停微妙填充 */
 .dropdown__link {
   border-radius: 4px;
@@ -511,7 +654,6 @@ div[class*='codeBlockContainer'] {
   background: var(--winui-subtle);
   color: var(--ifm-font-color-base);
 }
-
 /* 当前语言 = 左侧 3px 胶囊指示条 */
 .dropdown__link--active {
   position: relative;
@@ -528,13 +670,13 @@ div[class*='codeBlockContainer'] {
 }
 
 /* ---------- 14. 深浅色切换 = 图标交叉旋转换场 ----------
-   命中依据:
-   - [class*="toggleButton"]        按钮 toggleButton_gllP
-   - [class*="lightToggleIcon"]     浅色图标 lightToggleIcon_pyhR
-   - [class*="darkToggleIcon"]      深色图标 darkToggleIcon_wfgR
-   - [class*="systemToggleIcon"]    跟随系统图标 systemToggleIcon_QzmC
-   注:站点启用 respectPrefersColorScheme,实际为三图标;
-       light/dark 做交叉旋转,system 保持 Docusaurus 默认行为。
+命中依据:
+[class*="toggleButton"]        按钮 toggleButton_gllP
+[class*="lightToggleIcon"]     浅色图标 lightToggleIcon_pyhR
+[class*="darkToggleIcon"]      深色图标 darkToggleIcon_wfgR
+[class*="systemToggleIcon"]    跟随系统图标 systemToggleIcon_QzmC
+注:站点启用 respectPrefersColorScheme,实际为三图标;
+light/dark 做交叉旋转,system 保持 Docusaurus 默认行为。
 */
 [class*="toggleButton"] {
   position: relative;
@@ -548,9 +690,8 @@ div[class*='codeBlockContainer'] {
 }
 [class*="toggleButton"]:hover { background: var(--winui-subtle); }
 [class*="toggleButton"]:active { background: var(--winui-fill-pressed); }
-
 /* light/dark 两图标叠放于按钮中心,强制 display 以便 opacity 控制交叉换场
-   (systemToggleIcon 不在此列,保留 Docusaurus 默认 display 切换) */
+(systemToggleIcon 不在此列,保留 Docusaurus 默认 display 切换) */
 [class*="toggleButton"] [class*="lightToggleIcon"],
 [class*="toggleButton"] [class*="darkToggleIcon"] {
   display: block;
@@ -580,40 +721,29 @@ div[class*='codeBlockContainer'] {
   opacity: 0;
   transform: translate(-50%, -50%) rotate(90deg) scale(.5);
 }
-
 /* Acrylic 浮层展开动画(11/13 节复用) */
 @keyframes winui-flyout {
   from { opacity: 0; transform: translateY(-4px) scale(.98); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ---------- 15. 正文链接 = WinUI Hyperlink ----------
-   修复:之前完全没写正文链接规则;WinUI 链接默认带下划线,
-        静息态浅下划线、悬停变实,强调色随主题切换(--winui-accent)。
-   注:color-mix() 需 2023+ 浏览器;不支持时该声明失效,退化为纯强调色,依然成立。
-*/
+/* ---------- 15. 正文链接 ----------
+注:官方 WinUI3 正文 Hyperlink 默认是带下划线的;若要恢复官方样式,
+把 .markdown a 的两条 text-decoration 换成:
+  text-decoration-line: underline;
+  text-decoration-color: currentColor; 即可。 */
 :root {
   --ifm-link-color: var(--winui-accent);
   --ifm-link-hover-color: var(--winui-accent-hover);
 }
 .markdown a:not(.hash-link) {
   color: var(--winui-accent);
-  text-decoration-line: underline;                    /* WinUI 链接默认带下划线 */
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  text-decoration-color: color-mix(in srgb, var(--winui-accent) 45%, transparent); /* 静息态浅下划线 */
-  transition: color .15s var(--winui-ease), text-decoration-color .15s var(--winui-ease);
+  transition: color .15s var(--winui-ease);
 }
-.markdown a:not(.hash-link):hover {
-  color: var(--winui-accent-hover);
-  text-decoration-color: var(--winui-accent-hover);   /* 悬停:下划线变实 */
-}
+.markdown a:not(.hash-link):hover { color: var(--winui-accent-hover); }
 .markdown a:not(.hash-link):active { color: var(--winui-accent-pressed); }
-
-/* 标题锚点 # 保持克制,不参与链接样式 */
 .hash-link { color: var(--ifm-color-emphasis-400); text-decoration: none; }
-.hash-link:hover { color: var(--winui-accent); }
-
+.hash-link:hover { color: var(--winui-link, var(--winui-accent)); }
 /* ---------- 16. 首页卡片等高 ---------- */
 .features .row {
   display: flex;
@@ -685,4 +815,125 @@ div[class*='codeBlockContainer'] {
 .linkcard .logo img {
   display: block;
   border-radius: 6px;
+}
+
+/* ---------- 18. 复选框 = WinUI CheckBox ----------
+官方:dev/CheckBox/CheckBox_themeresources.xaml
+  未选:20×20、4px 圆角、ControlStrongStrokeColorDefault 边框、ControlAltFillColor 底
+  选中:底=SystemAccentColor,对勾=TextOnAccentFillColorPrimary(浅白/深黑),对勾弹入
+  禁用:灰化。命中 input[type="checkbox"](含 Markdown 任务列表,带 disabled) */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border-radius: 4px;
+  border: 1px solid var(--winui-stroke-bottom);  /* ControlStrongStrokeColorDefault */
+  background-color: var(--winui-fill);           /* ControlAltFillColorSecondary */
+  position: relative;
+  cursor: pointer;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: background-color .15s var(--winui-ease), border-color .15s var(--winui-ease);
+}
+/* 对勾:双边框旋转法,选中时从中心弹入(官方对勾有缩放动画) */
+input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 4px; left: 4.5px;
+  width: 9px; height: 5px;
+  border-left: 2px solid var(--winui-on-accent);
+  border-bottom: 2px solid var(--winui-on-accent);
+  transform: rotate(-45deg) scale(0);
+  transform-origin: center;
+  transition: transform .18s var(--winui-ease);
+}
+input[type="checkbox"]:hover { background-color: var(--winui-fill-hover); }
+input[type="checkbox"]:checked { background-color: var(--winui-accent); border-color: var(--winui-accent); }
+input[type="checkbox"]:checked:hover { background-color: var(--winui-accent-hover); border-color: var(--winui-accent-hover); }
+input[type="checkbox"]:checked:active { background-color: var(--winui-accent-pressed); border-color: var(--winui-accent-pressed); }
+input[type="checkbox"]:checked::after { transform: rotate(-45deg) scale(1); }
+/* 半选态(官方:中央短横线) */
+input[type="checkbox"]:indeterminate { background-color: var(--winui-accent); border-color: var(--winui-accent); }
+input[type="checkbox"]:indeterminate::after {
+  top: 8px; left: 5px; width: 8px; height: 0;
+  border: none; border-top: 2px solid var(--winui-on-accent);
+  transform: none;
+}
+/* 禁用(任务列表为只读):灰化 */
+input[type="checkbox"]:disabled { cursor: default; border-color: var(--ifm-color-emphasis-300); background-color: transparent; }
+input[type="checkbox"]:disabled:hover { background-color: transparent; }
+input[type="checkbox"]:disabled:checked { background-color: var(--ifm-color-emphasis-300); border-color: var(--ifm-color-emphasis-300); }
+input[type="checkbox"]:disabled:checked::after { border-color: var(--ifm-background-surface-color); }
+/* 任务列表去掉 li 圆点(:has 为渐进增强,不支持时仅圆点仍在) */
+.markdown li:has(> input[type="checkbox"]) { list-style: none; }
+
+/* ---------- 19. 移动端导航抽屉 ----------
+配合第 1 节修复:显式 z-index 确保抽屉与遮罩在导航栏之内正确分层,
+抽屉内部复用第 2 节 NavigationView 样式。 */
+.navbar-sidebar {
+  background-color: var(--ifm-background-color);
+  z-index: calc(var(--ifm-z-index-fixed, 200) + 10);
+}
+.navbar-sidebar__backdrop {
+  background-color: rgba(0, 0, 0, .4);
+  z-index: calc(var(--ifm-z-index-fixed, 200) + 5);
+}
+.navbar-sidebar__brand { border-bottom: 1px solid var(--winui-stroke); }
+.navbar-sidebar .menu__link { font-size: 14px; }
+.navbar-sidebar .navbar__link { border-radius: 4px; }
+.navbar-sidebar .navbar__link:hover { background: var(--winui-subtle); }
+/* ---------- 18. 入场分段浮入 ----------
+SPA 切页时 DOM 重建,动画会随每次进入页面重放;
+延迟逐块递增并封顶,长文档不拖沓。 */
+@keyframes winui-rise {
+  from { opacity: 0; transform: translateY(14px); }
+}
+/* 文档正文:逐块浮入(前 6 块依次错开,之后统一 0.25s) */
+.markdown > * {
+  animation: winui-rise .5s var(--winui-ease) both;
+}
+.markdown > *:nth-child(n+2) { animation-delay: .05s; }
+.markdown > *:nth-child(n+3) { animation-delay: .1s; }
+.markdown > *:nth-child(n+4) { animation-delay: .15s; }
+.markdown > *:nth-child(n+5) { animation-delay: .2s; }
+.markdown > *:nth-child(n+6) { animation-delay: .25s; }
+/* 主页特性卡片:一张一张浮入 */
+.features .col {
+  animation: winui-rise .5s var(--winui-ease) both;
+}
+.features .col:nth-child(n+2) { animation-delay: .08s; }
+.features .col:nth-child(n+3) { animation-delay: .16s; }
+.features .col:nth-child(n+4) { animation-delay: .24s; }
+/* 尊重系统"减少动态效果"偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .markdown > *,
+  .features .col { animation: none; }
+}
+
+/* ---------- 19. 主页卡片 + LinkCard = WinUI 按钮风格 ----------
+与第 3 节按钮同一套交互语言:微妙填充 + 深色底边 + 悬停/按压换色。
+按钮不"离地",所以去掉原来的上浮与阴影。
+本节位于第 17 节之后,自动覆盖旧卡片样式;LinkCard.tsx 无需改动。 */
+.features .card,
+.linkcard {
+  background: var(--winui-fill);
+  border: 1px solid var(--winui-stroke);
+  border-bottom-color: var(--winui-stroke-bottom);   /* 按钮灵魂:深色底边 */
+  box-shadow: none;
+  transition: background .15s var(--winui-ease), border-color .15s var(--winui-ease);
+}
+.features .card:hover,
+.linkcard:hover {
+  background: var(--winui-fill-hover);
+  border-color: var(--winui-stroke);
+  border-bottom-color: var(--winui-stroke-bottom);   /* 悬停:底边仍保持深色 */
+  box-shadow: none;
+  transform: none;
+}
+.features .card:active,
+.linkcard:active {
+  background: var(--winui-fill-pressed);
+  border-bottom-color: var(--winui-stroke);          /* 按下:底边消失,与按钮一致 */
 }

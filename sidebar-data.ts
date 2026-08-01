@@ -11,6 +11,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 5',
       collapsed: false,
+      link: { type: 'doc', id: 'Xdows-Security-5/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security-5/get-started', label: 'Getting Started' },
         { type: 'doc', id: 'Xdows-Security-5/protection', label: 'Protection Capabilities' },
@@ -25,6 +26,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 4.1',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Security-4.1/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security-4.1/get-started', label: 'Getting Started' },
         { type: 'doc', id: 'Xdows-Security-4.1/update', label: 'Changelog' },
@@ -35,12 +37,14 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 4.0',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Security-4/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security-4/get-started', label: 'Getting Started' },
         {
           type: 'category',
           label: 'Client',
           collapsed: true,
+          link: { type: 'doc', id: 'Xdows-Security-4/Client/Windows' },
           items: [
             { type: 'doc', id: 'Xdows-Security-4/Client/Windows', label: 'Windows' },
           ],
@@ -49,12 +53,14 @@ export const sidebarData: Record<string, SidebarItem[]> = {
           type: 'category',
           label: 'Xdows Tools',
           collapsed: false,
+          link: { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/get-started' },
           items: [
             { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/get-started', label: 'Getting Started' },
             {
               type: 'category',
               label: 'Plugins',
               collapsed: false,
+              link: { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/Plugins/get-started' },
               items: [
                 { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/Plugins/get-started', label: 'Getting Started' },
                 { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/Plugins/Packages', label: 'Making Packages' },
@@ -70,6 +76,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Model',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Model/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Model/get-started', label: 'Getting Started' },
       ],
@@ -81,6 +88,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 5',
       collapsed: false,
+      link: { type: 'doc', id: 'Xdows-Security-5/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security-5/get-started', label: '快速开始' },
         { type: 'doc', id: 'Xdows-Security-5/protection', label: '保护能力' },
@@ -95,6 +103,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 4.1',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Security-4.1/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security-4.1/get-started', label: '快速开始' },
         { type: 'doc', id: 'Xdows-Security-4.1/update', label: '更新日志' },
@@ -105,12 +114,14 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 4.0',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Security-4/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security-4/get-started', label: '快速开始' },
         {
           type: 'category',
           label: '客户端',
           collapsed: true,
+          link: { type: 'doc', id: 'Xdows-Security-4/Client/Windows' },
           items: [
             { type: 'doc', id: 'Xdows-Security-4/Client/Windows', label: 'Windows' },
           ],
@@ -119,12 +130,14 @@ export const sidebarData: Record<string, SidebarItem[]> = {
           type: 'category',
           label: 'Xdows Tools',
           collapsed: false,
+          link: { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/get-started' },
           items: [
             { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/get-started', label: '快速开始' },
             {
               type: 'category',
               label: '插件系统',
               collapsed: false,
+              link: { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/Plugins/get-started' },
               items: [
                 { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/Plugins/get-started', label: '快速开始' },
                 { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/Plugins/Packages', label: '打包插件' },
@@ -140,6 +153,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 3.0',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Security/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security/get-started', label: '快速开始' },
         { type: 'doc', id: 'Xdows-Security/system', label: '系统要求' },
@@ -158,6 +172,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Model',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Model/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Model/get-started', label: '快速开始' },
       ],
@@ -166,6 +181,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Cloud',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Cloud/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Cloud/get-started', label: '快速开始' },
       ],
@@ -174,6 +190,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: '文件中转站',
       collapsed: true,
+      link: { type: 'doc', id: 'Files/Home' },
       items: [
         { type: 'doc', id: 'Files/Home', label: '暂无相关文档' },
       ],
@@ -182,6 +199,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'NTOS 系统',
       collapsed: true,
+      link: { type: 'doc', id: 'NTOS/Home' },
       items: [
         { type: 'doc', id: 'NTOS/Home', label: '暂无相关文档' },
       ],
@@ -190,6 +208,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Winget++',
       collapsed: true,
+      link: { type: 'doc', id: 'Winget-Plus/Home' },
       items: [
         { type: 'doc', id: 'Winget-Plus/Home', label: '暂无相关文档' },
       ],
@@ -201,6 +220,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 5',
       collapsed: false,
+      link: { type: 'doc', id: 'Xdows-Security-5/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security-5/get-started', label: '快速開始' },
         { type: 'doc', id: 'Xdows-Security-5/protection', label: '防護能力' },
@@ -215,6 +235,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 4.1',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Security-4.1/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security-4.1/get-started', label: '快速開始' },
         { type: 'doc', id: 'Xdows-Security-4.1/update', label: '更新日誌' },
@@ -225,12 +246,14 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Security 4.0',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Security-4/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Security-4/get-started', label: '快速開始' },
         {
           type: 'category',
           label: '客戶端',
           collapsed: true,
+          link: { type: 'doc', id: 'Xdows-Security-4/Client/Windows' },
           items: [
             { type: 'doc', id: 'Xdows-Security-4/Client/Windows', label: 'Windows' },
           ],
@@ -239,12 +262,14 @@ export const sidebarData: Record<string, SidebarItem[]> = {
           type: 'category',
           label: 'Xdows Tools',
           collapsed: false,
+          link: { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/get-started' },
           items: [
             { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/get-started', label: '快速開始' },
             {
               type: 'category',
               label: '外掛',
               collapsed: false,
+              link: { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/Plugins/get-started' },
               items: [
                 { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/Plugins/get-started', label: '快速開始' },
                 { type: 'doc', id: 'Xdows-Security-4/Xdows-Tools/Plugins/Packages', label: '建立外掛套件' },
@@ -260,6 +285,7 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       type: 'category',
       label: 'Xdows Model',
       collapsed: true,
+      link: { type: 'doc', id: 'Xdows-Model/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Model/get-started', label: '快速開始' },
       ],

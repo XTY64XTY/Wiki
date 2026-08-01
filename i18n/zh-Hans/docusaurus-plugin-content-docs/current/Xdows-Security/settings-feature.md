@@ -68,7 +68,7 @@ Install\Bin\Xdows Tools
 ```
 
   </TabItem>
-  <TabItem value="advanced" label={'高级设置 Html<Badge type="warning" text="3.06 Beta" />'}>
+  <TabItem value="advanced" label={<>高级设置 Html <Badge type="warning" text="3.06 Beta" /></>}>
 
 ```txt
 Install\Bin\Settings\Advanced
