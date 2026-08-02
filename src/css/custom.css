@@ -314,6 +314,7 @@ Header 最小高度 48px,左内边距 16px,Chevron 命中区 32px,Content 内边
 [data-theme='dark'] { --winui-expander-content: rgba(255,255,255,.0326); }
 .markdown details.alert {
   margin: 16px 0;
+  padding: 0;
   overflow: hidden;
   border: 1px solid var(--winui-card-border);
   border-radius: 4px;
