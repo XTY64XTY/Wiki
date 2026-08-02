@@ -306,7 +306,90 @@ Docusaurus 默认 SVG 是线条风格,与官方实心字形不符,故隐藏后�
 [data-theme='dark'] .theme-admonition.alert--success { --ifm-alert-foreground-color: #6ccb5f; background-color: #393d1b; }
 [data-theme='dark'] .theme-admonition.alert--warning { --ifm-alert-foreground-color: #fce100; background-color: #433519; }
 [data-theme='dark'] .theme-admonition.alert--danger  { --ifm-alert-foreground-color: #ff99a4; background-color: #442726; }
-/* ---------- 5. 代码 ---------- */
+/* ---------- 5. Expander ----------
+官方: controls/dev/Expander/Expander_themeresources.xaml
+Header/Content 使用 CardBackgroundFillColor + CardStrokeColor;
+Header 最小高度 48px,左内边距 16px,Chevron 命中区 32px,Content 内边距 16px。 */
+:root { --winui-expander-content: rgba(255,255,255,.5); }
+[data-theme='dark'] { --winui-expander-content: rgba(255,255,255,.0326); }
+.markdown details.alert {
+  margin: 16px 0;
+  overflow: hidden;
+  border: 1px solid var(--winui-card-border);
+  border-radius: 4px;
+  background: var(--winui-expander-content);
+  box-shadow: none;
+  color: var(--ifm-font-color-base);
+}
+.markdown details.alert > summary {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  padding: 0 0 0 16px;
+  list-style: none;
+  cursor: pointer;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  font-weight: 400;
+  line-height: 1.4;
+  user-select: none;
+}
+.markdown details.alert > summary::-webkit-details-marker { display: none; }
+.markdown details.alert > summary::marker { content: ""; }
+/* 32px 命中背景保持静止,仅上层 12px Chevron 旋转。 */
+.markdown details.alert > summary::after {
+  content: "";
+  width: 32px;
+  height: 32px;
+  margin: 0 8px 0 auto;
+  flex: 0 0 32px;
+  border-radius: 4px;
+  background-color: transparent;
+  transition: background-color .15s var(--winui-ease);
+}
+.markdown details.alert > summary::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  left: auto;
+  width: 12px;
+  height: 12px;
+  border: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='m2.25 4.25 3.75 3.5 3.75-3.5' fill='none' stroke='%231a1a1a' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transform-origin: center;
+  transition: transform .2s var(--winui-ease);
+}
+[data-theme='dark'] .markdown details.alert > summary::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='m2.25 4.25 3.75 3.5 3.75-3.5' fill='none' stroke='%23f5f5f5' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.markdown details.alert > summary:hover::after { background-color: var(--winui-subtle); }
+.markdown details.alert > summary:active::after { background-color: var(--winui-fill-pressed); }
+.markdown details.alert[data-collapsed='false'] > summary::before,
+.markdown details.alert[open]:not([class*='isBrowser']) > summary::before {
+  transform: translateY(-50%) rotate(180deg);
+}
+.markdown details.alert > div > div[class*='collapsibleContent'] {
+  margin: 0;
+  padding: 16px;
+  border-top: 1px solid var(--winui-card-border);
+}
+.markdown details.alert > div > div[class*='collapsibleContent'] > :first-child { margin-top: 0; }
+.markdown details.alert > div > div[class*='collapsibleContent'] > :last-child { margin-bottom: 0; }
+.markdown details.alert > summary:focus-visible {
+  outline: 2px solid var(--winui-accent);
+  outline-offset: -3px;
+}
+
+/* ---------- 6. 代码 ----------
+Fenced code block 对齐单文件演示页的 Windows Terminal 风格:
+固定 #1e1e1e、标题栏、Cascadia Code、6px 圆角与克制阴影。
+行内 code 保持原来的浅色 subtle fill。 */
 :not(pre) > code {
   background: var(--winui-subtle);
   border: none;
@@ -316,11 +399,79 @@ Docusaurus 默认 SVG 是线条风格,与官方实心字形不符,故隐藏后�
   font-size: .85em;
 }
 div[class*='codeBlockContainer'] {
+  --winui-code-label: "Code";
+  --ifm-pre-padding: 14px 16px;
+  --ifm-code-font-size: 12.5px;
+  overflow: hidden;
+  margin: 14px 0 20px;
+  border: 1px solid rgba(255,255,255,.08);
   border-radius: 6px;
+  background: #1e1e1e;
+  color: #d4d4d4;
   box-shadow: 0 2px 8px rgba(0,0,0,.18);
 }
+div[class*='codeBlockContainer'].language-powershell { --winui-code-label: "PowerShell"; }
+div[class*='codeBlockContainer'].language-c { --winui-code-label: "C"; }
+div[class*='codeBlockContainer'].language-cpp { --winui-code-label: "C++"; }
+div[class*='codeBlockContainer'].language-csharp { --winui-code-label: "C#"; }
+div[class*='codeBlockContainer'].language-js { --winui-code-label: "JavaScript"; }
+div[class*='codeBlockContainer'].language-py { --winui-code-label: "Python"; }
+div[class*='codeBlockContainer'].language-text,
+div[class*='codeBlockContainer'].language-txt { --winui-code-label: "Text"; }
+div[class*='codeBlockContainer'].language-pseudo { --winui-code-label: "Pseudocode"; }
+div[class*='codeBlockContainer'].language-EPL { --winui-code-label: "EPL"; }
+/* 无 title 元数据的普通 ```lang 代码块也生成与参考页一致的标题栏。 */
+div[class*='codeBlockContainer']:not(:has(> div[class*='codeBlockTitle']))::before,
+div[class*='codeBlockContainer'] > div[class*='codeBlockTitle'] {
+  display: flex;
+  min-height: 37px;
+  align-items: center;
+  padding: 8px 78px 8px 32px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  background-color: rgba(255,255,255,.045);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 16 16'%3E%3Crect x='1.5' y='2.5' width='13' height='11' rx='1.5' fill='none' stroke='%238f8f8f'/%3E%3Cpath d='m4 6 2 2-2 2m4.5 0H12' fill='none' stroke='%238f8f8f' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: 12px center;
+  background-repeat: no-repeat;
+  color: #9d9d9d;
+  font: 12px/20px "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+}
+div[class*='codeBlockContainer']:not(:has(> div[class*='codeBlockTitle']))::before {
+  content: var(--winui-code-label);
+}
+div[class*='codeBlockContainer'] > div[class*='codeBlockContent'] { background: #1e1e1e; }
+div[class*='codeBlockContainer'] pre,
+div[class*='codeBlockContainer'] code {
+  background: #1e1e1e;
+  color: inherit;
+  font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+div[class*='codeBlockContainer'] [class*='buttonGroup'] {
+  top: -32px;
+  right: 10px;
+  column-gap: 4px;
+}
+div[class*='codeBlockContainer'] [class*='buttonGroup'] button,
+.theme-code-block:hover [class*='buttonGroup'] button {
+  width: 26px;
+  height: 26px;
+  padding: 5px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-bottom-color: rgba(255,255,255,.3);
+  border-radius: 4px;
+  background: rgba(255,255,255,.06);
+  color: #e5e5e5;
+  opacity: .78;
+  transition: background .15s, color .15s, opacity .15s;
+}
+div[class*='codeBlockContainer'] [class*='buttonGroup'] button:hover,
+div[class*='codeBlockContainer'] [class*='buttonGroup'] button:focus-visible {
+  background: rgba(255,255,255,.11);
+  opacity: 1;
+}
 
-/* ---------- 6. 表格(DataGrid 感) ---------- */
+/* ---------- 7. 表格(DataGrid 感) ---------- */
 .markdown table { font-size: 13.5px; }
 .markdown thead th {
   border-bottom-color: var(--winui-stroke-bottom);
@@ -342,7 +493,7 @@ div[class*='codeBlockContainer'] {
 .tabs__item {
   position: relative;
   border-radius: 0;
-  padding: 8px 12px;                         /* 上下均衡 8px,左右 12px */
+  padding: 8px 12px 8px;
   border-bottom: none;
   font-size: 14px;                           /* SelectorBar 文字为正文级 14px */
   color: var(--ifm-font-color-base);         /* TextFillColorPrimary(始终,非灰) */

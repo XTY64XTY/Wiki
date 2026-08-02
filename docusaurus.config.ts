@@ -183,7 +183,8 @@ const config: Config = {
       copyright: `Xdows Software All Rights Reserved`,
     },
     prism: {
-      theme: prismThemes.github,
+      // Fenced code blocks keep the Windows Terminal palette in both modes.
+      theme: prismThemes.vsDark,
       darkTheme: prismThemes.vsDark,
       additionalLanguages: ['csharp', 'cpp', 'python', 'json', 'bash'],
     },
