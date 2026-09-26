@@ -1,6 +1,6 @@
 ---
 title: 保护能力
-description: Xdows Security 5 的 R0/R3 防护边界、开关策略、失败策略和扫描引擎。
+description: Xdows Security 5 的 R0/R3 防护边界、开关策略、失败策略、声明式行为规则和扫描引擎。
 ---
 
 # 保护能力 {#Protection}
@@ -17,12 +17,24 @@ Xdows Security 同时提供用户态 R3 防护和驱动支持的 R0 防护。两
 | 注册表防护 | 通过 ETW 观察受保护规则的变化，合并重复事件、识别并扫描修改者、记录并询问用户；阻止选择发生在检测之后，不能替代事务级回滚 | 通过内核注册表回调在创建、设置值、删除值、删除键、重命名、还原、替换和卸载操作完成前等待用户决策 |
 | 自我防护 | 负责主程序状态、日志和用户交互 | 限制针对受保护进程的危险句柄和注入前置条件，并验证受控关闭 |
 
+内核侧的详细内容——协议版本、IOCTL 映射、能力位、行为类型和防护模块——见 [内核驱动架构](./driver/architecture)。
+
 ## 开关与失败策略 {#Switches}
 
 - “驱动防护”是 R0 能力的总开关。R0 引导防护、R0 注册表防护和 BootFilter 不提供独立开关。
 - 设置中的注册表总开关及“辅助规则”“其他规则”只控制 R3 注册表防护及其规则类别，不单独控制 R0 注册表模块。
 - R0 注册表与引导操作需要用户态桥接提供决策。桥接缺失、等待超时或资源不足时，受保护操作按保守策略拒绝并记录。
 - BootFilter 使用独立协议 v1；主驱动与托管桥接使用协议 v9。两套协议不能混用。
+
+### 声明式行为规则 {#DeclarativeRules}
+
+在固定的内核内规则之外，驱动还暴露一个解释器（能力位 `0x1000`），让应用无需重新构建驱动即可编写行为规则。一条规则约束一个 发起者 × 命令行 × 目标 三元组，可选限定到特定操作，也可选限速。规则集存放在 `Config\BehaviorRules.json`，并通过 `IOCTL_XDOWS_SECURITY_SET_BEHAVIOR_RULES`（0x811）下发。
+
+放行 / 拒绝（fail-open / fail-closed）是**逐规则属性**：基础设施故障时，未带 `FAIL_CLOSED` 的规则会放行该操作并记录，而带该标志的规则会用 `STATUS_ACCESS_DENIED` 拒绝。固定的内核内规则始终先被评估，因此声明式规则只能增加覆盖面，绝不会削弱内置的拒绝逻辑。
+
+### 发起者排除清单 {#InitiatorExclusions}
+
+发起者排除清单（能力位 `0x2000`，`IOCTL_XDOWS_SECURITY_SET_INITIATOR_EXCLUSIONS`，0x812）用于在进程、文件、句柄和注册表范围内抑制对已知良好发起者的用户态提示。排除项在**所有**关键闸门**之后**评估——在敏感句柄权限剥离之后、在 CI 信任闸门之后、在内置文件拒绝和自动运行规则之后——因此过宽的清单只会减少噪声，绝不会削弱防护。排除项也绝不会绕过已确认威胁的命令行规则。
 
 ## 扫描引擎 {#ScanEngines}
 
@@ -32,6 +44,8 @@ Xdows Security 同时提供用户态 R3 防护和驱动支持的 R0 防护。两
 | Xdows Model | 使用 ONNX 模型进行检测，支持 Standard、Flash、Pro 和 Adaptive 模式 | 全部开源 |
 | 基于云的扫描引擎 | 由 `MEMZUAC` 提供的云扫描服务 | 不开源 |
 
-Xdows Model 的详细架构、特征契约和训练流程见 [Xdows Model 文档](../Xdows-Model/get-started)。
+Xdows Model 报告三档判定——`Clean`、`Suspicious` 或 `Malware`——其中 `Suspicious` 区间从模型的推荐阈值开始，`Malware` 从固定阈值开始。托管 Invoker 和原生运行时都遵循同一套阈值 manifest，并且都会拒绝加载 manifest 与编译期特征布局不匹配的 Pro 模型，因此部署不完整的模型集会明确报错，而不会用错误的特征布局打分。
+
+Xdows Model 的详细架构、特征契约和训练流程见 [Xdows Model 文档](../Xdows-Model/get-started)。针对同一套原生推理的安全 Rust 绑定见 [Rust 调用器](../Xdows-Model/rust-invoker)。
 
 Xdows Tools 是产品内置的工具集；产品名始终写作 `Xdows Tools`。

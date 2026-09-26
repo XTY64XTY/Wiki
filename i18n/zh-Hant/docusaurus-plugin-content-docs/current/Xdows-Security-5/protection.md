@@ -1,6 +1,6 @@
 ---
 title: 防護能力
-description: Xdows Security 5 的 R0/R3 防護邊界、開關策略、失敗策略和掃描引擎。
+description: Xdows Security 5 的 R0/R3 防護邊界、開關策略、失敗策略、宣告式行為規則和掃描引擎。
 ---
 
 # 防護能力 {#Protection}
@@ -17,12 +17,24 @@ Xdows Security 同時提供使用者模式 R3 防護和驅動程式支援的 R0 
 | 登錄檔防護 | 透過 ETW 觀察受保護規則的變更，合併重複事件、識別並掃描修改者、記錄並詢問使用者；阻擋選擇發生在偵測之後，不能取代交易層級復原 | 透過核心登錄檔回呼，在建立、設定值、刪除值、刪除機碼、重新命名、還原、取代和卸載操作完成前等待使用者決策 |
 | 自我防護 | 負責主程式狀態、記錄和使用者互動 | 限制針對受保護處理程序的危險控制代碼和注入前置條件，並驗證受控關閉 |
 
+關於核心端的細節——協定版本、IOCTL 對應、能力位、行為類型和防護模組——見 [核心驅動程式架構](./driver/architecture)。
+
 ## 開關與失敗策略 {#Switches}
 
 - 「驅動程式防護」是 R0 能力的總開關。R0 開機防護、R0 登錄檔防護和 BootFilter 不提供獨立開關。
 - 設定中的登錄檔總開關及「輔助規則」「其他規則」只控制 R3 登錄檔防護及其規則類別，不單獨控制 R0 登錄檔模組。
 - R0 登錄檔與開機操作需要使用者模式橋接提供決策。橋接缺失、等待逾時或資源不足時，受保護操作會依保守策略拒絕並記錄。
 - BootFilter 使用獨立協定 v1；主驅動程式與受控橋接使用協定 v9。兩套協定不能混用。
+
+### 宣告式行為規則 {#DeclarativeRules}
+
+除了固定的核心內建規則之外，驅動程式還提供一個解譯器（能力位 `0x1000`），讓主程式無需重新建置驅動程式即可撰寫行為規則。一條規則約束一個 Initiator × CommandLine × Target 三元組，可選地限定於特定操作，並可選地做速率限制。規則集位於 `Config\BehaviorRules.json`，並透過 `IOCTL_XDOWS_SECURITY_SET_BEHAVIOR_RULES`（0x811）推送。
+
+放行／拒絕是**每條規則各自的屬性**：發生基礎設施失敗時，沒有 `FAIL_CLOSED` 的規則會放行操作並記錄，而帶有該旗標的規則會以 `STATUS_ACCESS_DENIED` 拒絕。固定的核心內建規則永遠優先評估，因此宣告式規則只能增加涵蓋範圍，永遠不會削弱內建的拒絕。
+
+### 發起者排除 {#InitiatorExclusions}
+
+發起者排除清單（能力位 `0x2000`，`IOCTL_XDOWS_SECURITY_SET_INITIATOR_EXCLUSIONS` 0x812）可對已知良好的行為者，在處理程序、檔案、控制代碼和登錄檔範圍抑制使用者模式提示。排除在**所有**關鍵閘門之後才會評估——在敏感控制代碼權利剝除之後、在 CI 信任閘門之後，以及在內建檔案拒絕和 autorun 規則之後——因此過寬的清單只會降低雜訊，永遠不會降低防護。它們也永遠不會繞過已確認威脅的命令列規則。
 
 ## 掃描引擎 {#ScanEngines}
 
@@ -32,6 +44,8 @@ Xdows Security 同時提供使用者模式 R3 防護和驅動程式支援的 R0 
 | Xdows Model | 使用 ONNX 模型進行偵測，支援 Standard、Flash、Pro 和 Adaptive 模式 | 全部開源 |
 | 基於雲的掃描引擎 | 由 `MEMZUAC` 提供的雲端掃描服務 | 不開源 |
 
-Xdows Model 的詳細架構、特徵契約和訓練流程見 [Xdows Model 文件](../Xdows-Model/get-started)。
+Xdows Model 回報三檔判定——`Clean`、`Suspicious` 或 `Malware`——其中 `Suspicious` 區段從模型的建議閾值起算，`Malware` 從其固定閾值起算。託管 Invoker 和原生執行階段都遵循相同的閾值 manifest，且都會拒絕載入 manifest 與編譯期特徵佈局不符的 Pro 模型，因此部分部署的模型集會明確失敗，而不是以錯誤的特徵佈局評分。
+
+Xdows Model 的詳細架構、特徵契約和訓練流程見 [Xdows Model 文件](../Xdows-Model/get-started)。同一套原生推理的安全 Rust 繫結記載於 [Rust Invoker](../Xdows-Model/rust-invoker)。
 
 Xdows Tools 是產品內建的工具集；產品名稱一律寫作 `Xdows Tools`。

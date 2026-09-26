@@ -1,6 +1,6 @@
 ---
 title: Training and Evaluation
-description: Xdows Model's training tools, sample specifications, hyperparameter configuration, and batch evaluation flow.
+description: Xdows Model's training tools, sample specifications, dataset splitting, hyperparameter configuration, recommended-threshold calibration, and batch evaluation flow.
 ---
 
 # Training and Evaluation {#Training}
@@ -16,27 +16,45 @@ Default sample directories come from `TrainingConfig`:
 
 Files in both directories should be PE files (`.exe`, `.dll`, etc.). Sample file names do not require a specific format, but it is recommended to store them by family or source for traceability.
 
+For Pro training, each sample may additionally carry three optional metadata fields that make the evaluation honest:
+
+| Field | Purpose |
+| --- | --- |
+| `GroupKey` | Malware family or campaign identifier. Samples sharing a `GroupKey` are kept on the same side of the split so near-duplicates cannot leak from the test set into the training set. |
+| `TimeKey` | Sample collection time. Required when `ProSplitMode` is `TimeOrdered`. |
+| `ContentHash` | SHA-256 of the file content, computed by the splitter for deduplication. |
+
 :::caution[Safety Notice]
 Do not commit real malware samples to the repository. `Xdows-Model\tests\samples\README.md` describes the storage and usage specification for safe samples. Black samples used for training should be placed outside the repository and excluded via `.gitignore`.
 :::
 
 ## Training Tool {#Maker}
 
-`Xdows-Model-Maker` is an interactive command-line training tool that displays a menu on startup:
+`Xdows-Model-Maker` is an interactive menu tool:
 
 ```powershell
 dotnet run --project D:\Code\Xdows-Model\Xdows-Model-Maker
 ```
 
-The menu supports the following operations:
+The menu has mode checkboxes plus these actions:
 
-- Train the Standard model
-- Train the Flash model
-- Train the Pro model (including 4-branch Stacking)
-- Train multiple modes at once
-- Sample cleaning and statistics
+- Start training (trains every checked mode in turn)
+- Start sample cleaning and statistics
+- **Copy artifacts to the invoker** — copies the freshly trained ONNX files, the Pro manifest, and the recommended-threshold manifests into `Xdows-Model-Invoker\Models\`, so the Invoker picks them up without a manual copy step
+- Exit
 
-Pro training trains the four branch models in turn (Standard / Flash / RawStat / Structural), then uses the Out-of-Fold probabilities to train the Fusion logistic regression model, ultimately outputting 5 ONNX files.
+Pro training trains the five branch models (Standard / Flash / RawStat / Structural / ImportBehavior) in turn, uses their Out-of-Fold probabilities to train the Fusion logistic regression model, and finally outputs 6 ONNX files plus `Xdows-Model-Pro.manifest.json`. The artifact list is derived from `ProBranches` and `ProModelManifest` rather than hard-coded, so a newly added branch cannot be silently left out of the copy step.
+
+### Dataset Splitting {#Splitter}
+
+Pro uses `ProDatasetSplitter` instead of a naive random split:
+
+1. **Content-hash deduplication** (`ProDeduplicateByContentHash`, default on) removes byte-identical samples first. Duplicates would otherwise land in both the training and the test set and inflate the reported metrics.
+2. **Group isolation** (`ProEnforceGroupIsolation`, default on) keeps every sample sharing a `GroupKey` entirely on one side. Samples without a `GroupKey` degrade to one group per sample, and the split report states plainly that group isolation was not effective.
+3. **Split strategy** (`ProSplitMode`): `StratifiedRandom` (default) keeps the class ratio in both halves; `TimeOrdered` sorts by `TimeKey` and puts the newest segment into the test set, and fails explicitly when a sample has no `TimeKey` rather than silently degrading.
+4. **Report**: the splitter prints the class distribution of both halves and the deduplication and isolation statistics.
+
+The outer test fraction is `ProTestFraction` (default `0.2`) and must lie strictly between 0 and 1.
 
 ## Hyperparameters {#Hyperparameters}
 
@@ -47,6 +65,9 @@ Key hyperparameters are defined in `TrainingConfig.cs` and can be modified befor
 | Parameter | Default | Description |
 | --- | --- | --- |
 | `RandomSeed` | 43846 | Global random seed, ensuring reproducibility |
+| `FalsePositiveCostRatio` | 2.65 | How many false negatives one false positive is worth; drives both threshold selection and sample weighting |
+| `UseCostSensitiveThreshold` | `true` | Calibrate the recommended threshold automatically instead of using the fixed one |
+| `UseCostSensitiveTrainingWeight` | `true` | Propagate the false-positive cost into the LightGBM positive-class weight |
 
 ### Standard {#HyperStandard}
 
@@ -62,7 +83,7 @@ Key hyperparameters are defined in `TrainingConfig.cs` and can be modified befor
 | `StandardFeatureFraction` | 0.9 | Feature sampling ratio |
 | `StandardSubsampleFraction` | 0.85 | Sample subsampling ratio |
 | `StandardTargetFalsePositiveRate` | 0.005 | Threshold-calibration target FPR |
-| `StandardThreshold` | 92.0 | Detection threshold (percentage) |
+| `StandardThreshold` | 92.0 | Fixed detection threshold (percentage) |
 
 ### Flash {#HyperFlash}
 
@@ -75,7 +96,7 @@ Key hyperparameters are defined in `TrainingConfig.cs` and can be modified befor
 | `FlashL1Regularization` | 0.01 | L1 regularization |
 | `FlashL2Regularization` | 0.2 | L2 regularization |
 | `FlashMaximumTreeDepth` | 5 | Maximum tree depth |
-| `FlashThreshold` | 96.0 | Detection threshold (percentage) |
+| `FlashThreshold` | 96.0 | Fixed detection threshold (percentage) |
 
 ### Pro {#HyperPro}
 
@@ -90,9 +111,22 @@ Key hyperparameters are defined in `TrainingConfig.cs` and can be modified befor
 | `ProMaximumTreeDepth` | 8 | Maximum tree depth |
 | `ProFeatureFraction` | 0.85 | Feature sampling ratio |
 | `ProSubsampleFraction` | 0.8 | Sample subsampling ratio |
-| `ProThreshold` | 94.0 | Detection threshold (percentage) |
+| `ProMaxParallelBranches` | 4 | Cap on branch parallelism |
+| `ProTestFraction` | 0.2 | Outer test-set fraction |
+| `ProSplitMode` | `StratifiedRandom` | `StratifiedRandom` or `TimeOrdered` |
+| `ProThreshold` | 94.0 | Fixed detection threshold (percentage) |
 
 Pro's Fusion model uses logistic regression and has no independent GBDT hyperparameters.
+
+## Recommended Threshold Calibration {#RecommendedThreshold}
+
+Every mode ships a recommended threshold alongside its ONNX file:
+
+- Standard → `Xdows-Model.threshold.json`
+- Flash → `Xdows-Model-Flash.threshold.json`
+- Pro → `Xdows-Model-Pro.threshold.json`, mirrored into `Xdows-Model-Pro.manifest.json`
+
+The value is chosen at training time with a cost-sensitive objective (one false positive is charged as `FalsePositiveCostRatio` false negatives) and recorded with the selection method. It defines the lower bound of the `Suspicious` band and never overrides the fixed threshold in `TrainingConfig`. The manifest is written next to both the ML.NET model and the exported ONNX file; only when `UseCostSensitiveThreshold` is on.
 
 ## Model Output {#Output}
 
@@ -100,11 +134,13 @@ After training completes, model files are output to the path specified by `Train
 
 | Mode | Output files |
 | --- | --- |
-| Standard | `Xdows-Model.zip` + `Xdows-Model.onnx` |
-| Flash | `Xdows-Model-Flash.zip` + `Xdows-Model-Flash.onnx` |
-| Pro | `Xdows-Model-Pro.zip` + `Xdows-Model-Pro.onnx` + 4 branch `.onnx` files |
+| Standard | `Xdows-Model.zip` + `Xdows-Model.onnx` + `Xdows-Model.threshold.json` |
+| Flash | `Xdows-Model-Flash.zip` + `Xdows-Model-Flash.onnx` + `Xdows-Model-Flash.threshold.json` |
+| Pro | `Xdows-Model-Pro.zip` + `Xdows-Model-Pro.onnx` + 5 branch `.onnx` files (`-Standard`, `-Flash`, `-RawStat`, `-Structural`, `-ImportBehavior`) + `Xdows-Model-Pro.manifest.json` + `Xdows-Model-Pro.threshold.json` |
 
-Pro defaults to outputting a 4-dimensional Fusion model plus 4 branch models; the Invoker automatically enables the Stacking ensemble path when loading. If only a 519-dimensional single model is exported (without branches), the Invoker takes the single-model fallback path and does not load the branch files.
+Pro defaults to outputting a 5-input Fusion model plus 5 branch models, and the Invoker enables the five-branch Stacking path after validating the manifest. A legacy four-branch model (4-input Fusion, 519-dimensional hybrid input, no manifest) still loads through the compatibility path; a 5143-dimensional single model without branches takes the single-model fallback path.
+
+Use **Copy artifacts to the invoker** in the Maker menu to place the whole set into `Xdows-Model-Invoker\Models\`. The Pro model, its five branch models, and its manifest must be deployed together — a five-input Fusion model without its manifest is rejected by the Invoker.
 
 ## Batch Evaluation {#Evaluator}
 
@@ -145,10 +181,12 @@ The CSV export contains the fields `mode,path,label,prediction,probability,error
 
 ## Native Consistency Test {#NativeConsistency}
 
-`tests\Invoke-NativeConsistency.ps1` scans the same batch of safe PE samples through both the managed caller and the native DLL, comparing whether the two conclusions are consistent and whether the probability difference is within tolerance:
+`tests\Invoke-NativeConsistency.ps1` scans the same batch of safe PE samples through both the managed caller and the native DLL for Standard, Flash, Pro, and Adaptive:
 
 ```powershell
 & 'D:\Code\Xdows-Model\tests\Invoke-NativeConsistency.ps1' -SkipBuild
 ```
+
+Both sides must agree on the three-tier verdict (`Clean` / `Suspicious` / `Malware`) and on the threat decision, and the probability difference must stay within the configured tolerance. Because the verdict depends on the recommended threshold, the script also asserts that the required model files are present — the five Pro branch models, `Xdows-Model-Pro.manifest.json`, and the three `*.threshold.json` manifests.
 
 After modifying the feature extraction or inference logic on either the Invoker or Native side, you must run this test once to ensure both sides reach consistent conclusions.

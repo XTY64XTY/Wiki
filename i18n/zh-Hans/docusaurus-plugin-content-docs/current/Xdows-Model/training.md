@@ -1,6 +1,6 @@
 ---
 title: 训练与评估
-description: Xdows Model 的训练工具、样本规范、超参数配置和批量评估流程。
+description: Xdows Model 的训练工具、样本规范、数据集划分、超参数配置、推荐阈值校准和批量评估流程。
 ---
 
 # 训练与评估 {#Training}
@@ -16,27 +16,45 @@ description: Xdows Model 的训练工具、样本规范、超参数配置和批�
 
 两个目录下的文件均应为 PE 文件（`.exe`、`.dll` 等）。样本文件名不强制要求特定格式，但建议按家族或来源分类存放以便回溯。
 
+Pro 训练时，每个样本还可以附带三个可选元数据字段，以保证评估结果真实可靠：
+
+| 字段 | 用途 |
+| --- | --- |
+| `GroupKey` | 恶意软件家族或活动标识。共享同一 `GroupKey` 的样本会保留在划分的同一侧，避免近似重复样本从测试集泄漏到训练集。 |
+| `TimeKey` | 样本采集时间。当 `ProSplitMode` 为 `TimeOrdered` 时必填。 |
+| `ContentHash` | 文件内容的 SHA-256，由划分器计算用于去重。 |
+
 :::caution[安全提示]
 不要提交真实恶意样本到仓库。`Xdows-Model\tests\samples\README.md` 描述了安全样本的存放与使用规范。训练用的黑样本应放在仓库外部，并通过 `.gitignore` 排除。
 :::
 
 ## 训练工具 {#Maker}
 
-`Xdows-Model-Maker` 是交互式命令行训练工具，启动后会显示菜单：
+`Xdows-Model-Maker` 是交互式菜单工具：
 
 ```powershell
 dotnet run --project D:\Code\Xdows-Model\Xdows-Model-Maker
 ```
 
-菜单支持以下操作：
+菜单提供模式复选框以及以下操作：
 
-- 训练 Standard 模型
-- 训练 Flash 模型
-- 训练 Pro 模型（含 4 分支 Stacking）
-- 同时训练多个模式
-- 样本清洗与统计
+- 开始训练（依次训练所有勾选的模式）
+- 开始样本清洗与统计
+- **复制产物到 Invoker** — 把刚训练好的 ONNX 文件、Pro manifest 和推荐阈值 manifest 复制到 `Xdows-Model-Invoker\Models\`，Invoker 无需手动复制即可加载
+- 退出
 
-Pro 训练会依次训练四个分支模型（Standard / Flash / RawStat / Structural），再用 Out-of-Fold 概率训练 Fusion 逻辑回归模型，最终输出 5 个 ONNX 文件。
+Pro 训练会依次训练五个分支模型（Standard / Flash / RawStat / Structural / ImportBehavior），再用它们的 Out-of-Fold 概率训练 Fusion 逻辑回归模型，最终输出 6 个 ONNX 文件以及 `Xdows-Model-Pro.manifest.json`。产物清单由 `ProBranches` 和 `ProModelManifest` 推导而来，而非写死，因此新增的分支不会被静默遗漏在复制步骤之外。
+
+### 数据集划分 {#Splitter}
+
+Pro 使用 `ProDatasetSplitter`，而不是简单的随机划分：
+
+1. **内容哈希去重**（`ProDeduplicateByContentHash`，默认开启）先移除字节完全相同的样本。否则重复样本会同时落入训练集和测试集，虚高报告的指标。
+2. **分组隔离**（`ProEnforceGroupIsolation`，默认开启）让共享同一 `GroupKey` 的样本全部落在同一侧。没有 `GroupKey` 的样本会退化为每个样本一组，划分报告会明确说明分组隔离未生效。
+3. **划分策略**（`ProSplitMode`）：`StratifiedRandom`（默认）在两半中保持类别比例；`TimeOrdered` 按 `TimeKey` 排序，把最新的一段放入测试集，且当样本缺少 `TimeKey` 时明确报错，而不是静默降级。
+4. **报告**：划分器会打印两半的类别分布以及去重和隔离统计。
+
+外层测试集比例为 `ProTestFraction`（默认 `0.2`），必须严格介于 0 和 1 之间。
 
 ## 超参数 {#Hyperparameters}
 
@@ -47,6 +65,9 @@ Pro 训练会依次训练四个分支模型（Standard / Flash / RawStat / Struc
 | 参数 | 默认值 | 说明 |
 | --- | --- | --- |
 | `RandomSeed` | 43846 | 全局随机种子，保证可复现 |
+| `FalsePositiveCostRatio` | 2.65 | 一个误报等价于多少个漏报；同时驱动阈值选择和样本加权 |
+| `UseCostSensitiveThreshold` | `true` | 自动校准推荐阈值，而不是使用固定阈值 |
+| `UseCostSensitiveTrainingWeight` | `true` | 将误报代价传递到 LightGBM 正类权重中 |
 
 ### Standard {#HyperStandard}
 
@@ -62,7 +83,7 @@ Pro 训练会依次训练四个分支模型（Standard / Flash / RawStat / Struc
 | `StandardFeatureFraction` | 0.9 | 特征采样比例 |
 | `StandardSubsampleFraction` | 0.85 | 样本采样比例 |
 | `StandardTargetFalsePositiveRate` | 0.005 | 阈值校准目标 FPR |
-| `StandardThreshold` | 92.0 | 判毒阈值（百分比） |
+| `StandardThreshold` | 92.0 | 固定判毒阈值（百分比） |
 
 ### Flash {#HyperFlash}
 
@@ -75,7 +96,7 @@ Pro 训练会依次训练四个分支模型（Standard / Flash / RawStat / Struc
 | `FlashL1Regularization` | 0.01 | L1 正则化 |
 | `FlashL2Regularization` | 0.2 | L2 正则化 |
 | `FlashMaximumTreeDepth` | 5 | 最大树深度 |
-| `FlashThreshold` | 96.0 | 判毒阈值（百分比） |
+| `FlashThreshold` | 96.0 | 固定判毒阈值（百分比） |
 
 ### Pro {#HyperPro}
 
@@ -90,9 +111,22 @@ Pro 训练会依次训练四个分支模型（Standard / Flash / RawStat / Struc
 | `ProMaximumTreeDepth` | 8 | 最大树深度 |
 | `ProFeatureFraction` | 0.85 | 特征采样比例 |
 | `ProSubsampleFraction` | 0.8 | 样本采样比例 |
-| `ProThreshold` | 94.0 | 判毒阈值（百分比） |
+| `ProMaxParallelBranches` | 4 | 分支并行度上限 |
+| `ProTestFraction` | 0.2 | 外层测试集比例 |
+| `ProSplitMode` | `StratifiedRandom` | `StratifiedRandom` 或 `TimeOrdered` |
+| `ProThreshold` | 94.0 | 固定判毒阈值（百分比） |
 
 Pro 的 Fusion 模型使用逻辑回归，没有独立的 GBDT 超参数。
+
+## 推荐阈值校准 {#RecommendedThreshold}
+
+每种模式都会随 ONNX 文件一同发布一个推荐阈值：
+
+- Standard → `Xdows-Model.threshold.json`
+- Flash → `Xdows-Model-Flash.threshold.json`
+- Pro → `Xdows-Model-Pro.threshold.json`，并同步记录到 `Xdows-Model-Pro.manifest.json`
+
+该值在训练时以代价敏感目标选出（一个误报按 `FalsePositiveCostRatio` 个漏报计），并随选择方法一同记录。它定义 `Suspicious` 区间的下界，且不会覆盖 `TrainingConfig` 中的固定阈值。只有在 `UseCostSensitiveThreshold` 开启时，manifest 才会写入 ML.NET 模型和导出的 ONNX 文件旁边。
 
 ## 模型输出 {#Output}
 
@@ -100,15 +134,17 @@ Pro 的 Fusion 模型使用逻辑回归，没有独立的 GBDT 超参数。
 
 | 模式 | 输出文件 |
 | --- | --- |
-| Standard | `Xdows-Model.zip` + `Xdows-Model.onnx` |
-| Flash | `Xdows-Model-Flash.zip` + `Xdows-Model-Flash.onnx` |
-| Pro | `Xdows-Model-Pro.zip` + `Xdows-Model-Pro.onnx` + 4 个分支 `.onnx` |
+| Standard | `Xdows-Model.zip` + `Xdows-Model.onnx` + `Xdows-Model.threshold.json` |
+| Flash | `Xdows-Model-Flash.zip` + `Xdows-Model-Flash.onnx` + `Xdows-Model-Flash.threshold.json` |
+| Pro | `Xdows-Model-Pro.zip` + `Xdows-Model-Pro.onnx` + 5 个分支 `.onnx`（`-Standard`、`-Flash`、`-RawStat`、`-Structural`、`-ImportBehavior`）+ `Xdows-Model-Pro.manifest.json` + `Xdows-Model-Pro.threshold.json` |
 
-Pro 默认输出 4 维 Fusion 模型 + 4 个分支模型，Invoker 加载时会自动启用 Stacking 集成路径。若只导出 519 维单模型（不含分支），Invoker 会走单模型降级路径，不加载分支文件。
+Pro 默认输出 5 输入 Fusion 模型加 5 个分支模型，Invoker 在校验 manifest 后启用 5 分支 Stacking 路径。旧版 4 分支模型（4 输入 Fusion、519 维混合输入、无 manifest）仍可通过兼容路径加载；不含分支的 5143 维单模型则走单模型降级路径。
+
+使用 Maker 菜单中的**复制产物到 Invoker**把整套文件放入 `Xdows-Model-Invoker\Models\`。Pro 模型、它的五个分支模型和 manifest 必须一起部署——没有 manifest 的 5 输入 Fusion 模型会被 Invoker 拒绝。
 
 ## 批量评估 {#Evaluator}
 
-`Xdows-Model-Evaluator` 对指定模式的模型在样本集上做批量评估，输出准确率、TPR、FPR、平均扫描耗时，可选导出误判样本 CSV。
+`Xdows-Model-Evaluator` 对指定模式的模型在样本集上做批量评估，输出准确率、TPR、FPR 和平均扫描耗时，可选导出误判样本 CSV。
 
 ```powershell
 dotnet run --project D:\Code\Xdows-Model\Xdows-Model-Evaluator -- --mode all --limit 700 --csv hard-cases.csv
@@ -145,10 +181,12 @@ CSV 导出包含 `mode,path,label,prediction,probability,error` 字段，只记�
 
 ## 原生一致性测试 {#NativeConsistency}
 
-`tests\Invoke-NativeConsistency.ps1` 会用同一批安全 PE 样本分别通过托管调用器和原生 DLL 执行扫描，比较两者结论是否一致、概率差是否在容差内：
+`tests\Invoke-NativeConsistency.ps1` 会用同一批安全 PE 样本，分别通过托管调用器和原生 DLL 对 Standard、Flash、Pro 和 Adaptive 执行扫描：
 
 ```powershell
 & 'D:\Code\Xdows-Model\tests\Invoke-NativeConsistency.ps1' -SkipBuild
 ```
+
+两端必须在三档判定（`Clean` / `Suspicious` / `Malware`）和威胁判定上一致，且概率差必须在配置的容差内。由于判定依赖推荐阈值，脚本还会断言所需的模型文件齐全——五个 Pro 分支模型、`Xdows-Model-Pro.manifest.json`，以及三个 `*.threshold.json` manifest。
 
 修改 Invoker 或 Native 任一侧的特征提取或推理逻辑后，都必须跑一遍此测试，确保两端结论一致。

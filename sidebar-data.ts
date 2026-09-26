@@ -15,6 +15,15 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       items: [
         { type: 'doc', id: 'Xdows-Security-5/get-started', label: 'Getting Started' },
         { type: 'doc', id: 'Xdows-Security-5/protection', label: 'Protection Capabilities' },
+        {
+          type: 'category',
+          label: 'Kernel Driver',
+          collapsed: false,
+          link: { type: 'doc', id: 'Xdows-Security-5/driver/architecture' },
+          items: [
+            { type: 'doc', id: 'Xdows-Security-5/driver/architecture', label: 'Architecture' },
+          ],
+        },
         { type: 'doc', id: 'Xdows-Security-5/driver-environment', label: 'Driver Environment' },
         { type: 'doc', id: 'Xdows-Security-5/build', label: 'Build and Installation' },
         { type: 'doc', id: 'Xdows-Security-5/troubleshooting', label: 'Troubleshooting' },
@@ -79,6 +88,9 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       link: { type: 'doc', id: 'Xdows-Model/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Model/get-started', label: 'Getting Started' },
+        { type: 'doc', id: 'Xdows-Model/architecture', label: 'Architecture' },
+        { type: 'doc', id: 'Xdows-Model/training', label: 'Training and Evaluation' },
+        { type: 'doc', id: 'Xdows-Model/rust-invoker', label: 'Rust Invoker' },
       ],
     },
   ],
@@ -92,6 +104,15 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       items: [
         { type: 'doc', id: 'Xdows-Security-5/get-started', label: '快速开始' },
         { type: 'doc', id: 'Xdows-Security-5/protection', label: '保护能力' },
+        {
+          type: 'category',
+          label: '内核驱动',
+          collapsed: false,
+          link: { type: 'doc', id: 'Xdows-Security-5/driver/architecture' },
+          items: [
+            { type: 'doc', id: 'Xdows-Security-5/driver/architecture', label: '驱动架构' },
+          ],
+        },
         { type: 'doc', id: 'Xdows-Security-5/driver-environment', label: '驱动环境检测' },
         { type: 'doc', id: 'Xdows-Security-5/build', label: '构建与安装' },
         { type: 'doc', id: 'Xdows-Security-5/troubleshooting', label: '故障排查' },
@@ -175,6 +196,9 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       link: { type: 'doc', id: 'Xdows-Model/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Model/get-started', label: '快速开始' },
+        { type: 'doc', id: 'Xdows-Model/architecture', label: '架构' },
+        { type: 'doc', id: 'Xdows-Model/training', label: '训练与评估' },
+        { type: 'doc', id: 'Xdows-Model/rust-invoker', label: 'Rust 调用器' },
       ],
     },
     {
@@ -224,6 +248,15 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       items: [
         { type: 'doc', id: 'Xdows-Security-5/get-started', label: '快速開始' },
         { type: 'doc', id: 'Xdows-Security-5/protection', label: '防護能力' },
+        {
+          type: 'category',
+          label: '核心驅動程式',
+          collapsed: false,
+          link: { type: 'doc', id: 'Xdows-Security-5/driver/architecture' },
+          items: [
+            { type: 'doc', id: 'Xdows-Security-5/driver/architecture', label: '驅動程式架構' },
+          ],
+        },
         { type: 'doc', id: 'Xdows-Security-5/driver-environment', label: '驅動程式環境檢測' },
         { type: 'doc', id: 'Xdows-Security-5/build', label: '建置與安裝' },
         { type: 'doc', id: 'Xdows-Security-5/troubleshooting', label: '疑難排解' },
@@ -288,6 +321,9 @@ export const sidebarData: Record<string, SidebarItem[]> = {
       link: { type: 'doc', id: 'Xdows-Model/get-started' },
       items: [
         { type: 'doc', id: 'Xdows-Model/get-started', label: '快速開始' },
+        { type: 'doc', id: 'Xdows-Model/architecture', label: '架構' },
+        { type: 'doc', id: 'Xdows-Model/training', label: '訓練與評估' },
+        { type: 'doc', id: 'Xdows-Model/rust-invoker', label: 'Rust 呼叫器' },
       ],
     },
   ],

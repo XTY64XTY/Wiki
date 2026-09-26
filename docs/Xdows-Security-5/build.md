@@ -7,24 +7,38 @@ description: Requirements, source build, and driver installation guide for Xdows
 
 ## Requirements {#Requirements}
 
-- Windows 10/11.
+- Windows 10/11. The app targets `net10.0-windows10.0.26100.0` with a minimum platform version of `10.0.17763.0` (Windows 10 1809).
 - Git and Visual Studio 2026.
 - .NET 10, WinUI 3, the MSVC C++ toolchain, and WDK integration.
 - A Windows SDK/WDK version that matches the project; the current driver project uses `10.0.28000.0`.
 - Administrator rights to install and run the drivers.
 - Access to GitHub and NuGet feeds.
+- Rust 1.74 or later, only if you also build the optional `Xdows-Model-Invoker-Rust` crate.
 
 ## Build from Source {#FromSource}
 
-Clone the three repositories under the same parent directory:
+Clone the repositories under the same parent directory. The first three are required; the Rust invoker is optional and only needed if you want to consume the models from Rust.
 
 ```powershell
 git clone https://github.com/XTY64XTY/Xdows-Security-5 Xdows-Security
 git clone https://github.com/XTY64XTY/Xdows-Model
 git clone https://github.com/XTY64XTY/Xdows-Security-Driver
+git clone https://github.com/XTY64XTY/Xdows-Model-Invoker-Rust   # optional
 ```
 
 Build `Xdows-Security\Xdows-Security.slnx` with Visual Studio or Visual Studio MSBuild. Use `Debug|x64` for normal development validation and `Release|x64` for release validation. The main solution builds the native model, main driver, and BootFilter and copies their assets into the app output.
+
+```powershell
+& 'D:\Visual-Studio\MSBuild\Current\Bin\amd64\MSBuild.exe' `
+  'D:\Code\Xdows-Security\Xdows-Security.slnx' `
+  /p:Configuration=Debug `
+  /p:Platform=x64 `
+  /p:WindowsTargetPlatformVersion=10.0.28000.0 `
+  /p:SignMode=Off `
+  /m
+```
+
+The app is published self-contained with AOT enabled (`PublishAot`, `PublishTrimmed`, `WindowsAppSDKSelfContained`), so use the Publish action in Visual Studio or `dotnet publish` when you need the AOT output.
 
 The complete output must include at least:
 
