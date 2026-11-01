@@ -42,7 +42,7 @@ Xdows Security 同時提供使用者模式 R3 防護和驅動程式支援的 R0 
 |-----|------|------|
 | Xdows Local | 使用匯入表、匯出表等靜態特徵分析 PE 檔案 | 全部開源 |
 | Xdows Model | 使用 ONNX 模型進行偵測，支援 Standard、Flash、Pro 和 Adaptive 模式 | 全部開源 |
-| 基於雲的掃描引擎 | 由 `SevenEngine` 提供的雲端雜湊查詢服務 | 不開源 |
+| SevenEngine | 雲端雜湊查詢服務 | 不開源 |
 
 應用程式只會將檔案的 MD5 雜湊傳送至 [SevenEngine](https://sevenengine-cloud.onrender.com/docs)，不會上傳檔案內容。若服務端未快取該雜湊，本次雲端掃描不會給出判定。
 

@@ -42,7 +42,7 @@ Xdows Security 同时提供用户态 R3 防护和驱动支持的 R0 防护。两
 |-----|------|------|
 | Xdows Local | 使用导入表、导出表等静态特征分析 PE 文件 | 全部开源 |
 | Xdows Model | 使用 ONNX 模型进行检测，支持 Standard、Flash、Pro 和 Adaptive 模式 | 全部开源 |
-| 基于云的扫描引擎 | 由 `SevenEngine` 提供的云端哈希查询服务 | 不开源 |
+| SevenEngine | 云端哈希查询服务 | 不开源 |
 
 应用仅将文件的 MD5 哈希发送到 [SevenEngine](https://sevenengine-cloud.onrender.com/docs)，不会上传文件内容。服务端未缓存该哈希时，本次云扫描不会给出判定。
 
