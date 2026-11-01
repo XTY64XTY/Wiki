@@ -42,7 +42,9 @@ Xdows Security 同時提供使用者模式 R3 防護和驅動程式支援的 R0 
 |-----|------|------|
 | Xdows Local | 使用匯入表、匯出表等靜態特徵分析 PE 檔案 | 全部開源 |
 | Xdows Model | 使用 ONNX 模型進行偵測，支援 Standard、Flash、Pro 和 Adaptive 模式 | 全部開源 |
-| 基於雲的掃描引擎 | 由 `MEMZUAC` 提供的雲端掃描服務 | 不開源 |
+| 基於雲的掃描引擎 | 由 `SevenEngine` 提供的雲端雜湊查詢服務 | 不開源 |
+
+應用程式只會將檔案的 MD5 雜湊傳送至 [SevenEngine](https://sevenengine-cloud.onrender.com/docs)，不會上傳檔案內容。若服務端未快取該雜湊，本次雲端掃描不會給出判定。
 
 Xdows Model 回報三檔判定——`Clean`、`Suspicious` 或 `Malware`——其中 `Suspicious` 區段從模型的建議閾值起算，`Malware` 從其固定閾值起算。託管 Invoker 和原生執行階段都遵循相同的閾值 manifest，且都會拒絕載入 manifest 與編譯期特徵佈局不符的 Pro 模型，因此部分部署的模型集會明確失敗，而不是以錯誤的特徵佈局評分。
 

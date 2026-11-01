@@ -42,7 +42,9 @@ The initiator exclusion list (capability `0x2000`, `IOCTL_XDOWS_SECURITY_SET_INI
 |------|-------------|-------------|
 | Xdows Local | Analyzes PE files using static features such as import and export tables | Fully open source |
 | Xdows Model | Uses ONNX models for detection and supports Standard, Flash, Pro, and Adaptive modes | Fully open source |
-| Cloud-based Scan Engine | Cloud scanning service provided by `MEMZUAC` | Closed source |
+| Cloud-based Scan Engine | Cloud hash lookup service provided by `SevenEngine` | Closed source |
+
+The app sends only the file's MD5 hash to [SevenEngine](https://sevenengine-cloud.onrender.com/docs); it does not upload file content. If the service has not cached the hash, the cloud scan returns no verdict.
 
 Xdows Model reports a three-tier verdict — `Clean`, `Suspicious`, or `Malware` — where the `Suspicious` band starts at the model's recommended threshold and `Malware` starts at its fixed threshold. The managed Invoker and the native runtime both honour the same threshold manifests, and both refuse to load a Pro model whose manifest does not match the compiled feature layout, so a partially deployed model set fails loudly instead of scoring with the wrong feature layout.
 

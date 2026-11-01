@@ -42,7 +42,9 @@ Xdows Security 同时提供用户态 R3 防护和驱动支持的 R0 防护。两
 |-----|------|------|
 | Xdows Local | 使用导入表、导出表等静态特征分析 PE 文件 | 全部开源 |
 | Xdows Model | 使用 ONNX 模型进行检测，支持 Standard、Flash、Pro 和 Adaptive 模式 | 全部开源 |
-| 基于云的扫描引擎 | 由 `MEMZUAC` 提供的云扫描服务 | 不开源 |
+| 基于云的扫描引擎 | 由 `SevenEngine` 提供的云端哈希查询服务 | 不开源 |
+
+应用仅将文件的 MD5 哈希发送到 [SevenEngine](https://sevenengine-cloud.onrender.com/docs)，不会上传文件内容。服务端未缓存该哈希时，本次云扫描不会给出判定。
 
 Xdows Model 报告三档判定——`Clean`、`Suspicious` 或 `Malware`——其中 `Suspicious` 区间从模型的推荐阈值开始，`Malware` 从固定阈值开始。托管 Invoker 和原生运行时都遵循同一套阈值 manifest，并且都会拒绝加载 manifest 与编译期特征布局不匹配的 Pro 模型，因此部署不完整的模型集会明确报错，而不会用错误的特征布局打分。
 
