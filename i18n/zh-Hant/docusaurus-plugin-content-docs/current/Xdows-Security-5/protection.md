@@ -46,6 +46,8 @@ Xdows Security 同時提供使用者模式 R3 防護和驅動程式支援的 R0 
 
 應用程式只會將檔案的 MD5 雜湊傳送至 [SevenEngine](https://sevenengine-cloud.onrender.com/docs)，不會上傳檔案內容。若服務端未快取該雜湊，本次雲端掃描不會給出判定。
 
+設定頁會請求 `/api/health`。服務回報正常時，引擎卡片會顯示引擎名稱、特徵維度、判定閾值和執行時間；請求失敗或服務回報異常時，保留「此引擎可能已經不受支援」的警告。
+
 Xdows Model 回報三檔判定——`Clean`、`Suspicious` 或 `Malware`——其中 `Suspicious` 區段從模型的建議閾值起算，`Malware` 從其固定閾值起算。託管 Invoker 和原生執行階段都遵循相同的閾值 manifest，且都會拒絕載入 manifest 與編譯期特徵佈局不符的 Pro 模型，因此部分部署的模型集會明確失敗，而不是以錯誤的特徵佈局評分。
 
 Xdows Model 的詳細架構、特徵契約和訓練流程見 [Xdows Model 文件](../Xdows-Model/get-started)。同一套原生推理的安全 Rust 繫結記載於 [Rust Invoker](../Xdows-Model/rust-invoker)。

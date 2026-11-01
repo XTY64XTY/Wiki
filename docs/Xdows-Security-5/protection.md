@@ -46,6 +46,8 @@ The initiator exclusion list (capability `0x2000`, `IOCTL_XDOWS_SECURITY_SET_INI
 
 The app sends only the file's MD5 hash to [SevenEngine](https://sevenengine-cloud.onrender.com/docs); it does not upload file content. If the service has not cached the hash, the cloud scan returns no verdict.
 
+The settings page checks `/api/health`. When the service reports healthy, the engine card shows the engine name, feature dimension, decision threshold, and uptime; a failed or unhealthy check keeps the warning that the engine may no longer be supported.
+
 Xdows Model reports a three-tier verdict — `Clean`, `Suspicious`, or `Malware` — where the `Suspicious` band starts at the model's recommended threshold and `Malware` starts at its fixed threshold. The managed Invoker and the native runtime both honour the same threshold manifests, and both refuse to load a Pro model whose manifest does not match the compiled feature layout, so a partially deployed model set fails loudly instead of scoring with the wrong feature layout.
 
 For details on the Xdows Model architecture, feature contracts, and training pipeline, see the [Xdows Model documentation](../Xdows-Model/get-started). A secure Rust binding to the same native inference is documented under [Rust Invoker](../Xdows-Model/rust-invoker).
