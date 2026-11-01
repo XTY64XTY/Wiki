@@ -42,11 +42,15 @@ The initiator exclusion list (capability `0x2000`, `IOCTL_XDOWS_SECURITY_SET_INI
 |------|-------------|-------------|
 | Xdows Local | Analyzes PE files using static features such as import and export tables | Fully open source |
 | Xdows Model | Uses ONNX models for detection and supports Standard, Flash, Pro, and Adaptive modes | Fully open source |
-| SevenEngine | Cloud hash lookup service | Closed source |
+| SevenEngine | Cloud scanning service provided by NewEra Studio | Closed source |
 
-The app sends only the file's MD5 hash to [SevenEngine](https://sevenengine-cloud.onrender.com/docs); it does not upload file content. If the service has not cached the hash, the cloud scan returns no verdict.
+SevenEngine is provided by NewEra Studio. The selected scan type controls what is sent to the service:
 
-The settings page checks `/api/health`. When the service reports healthy, the engine card shows the engine name, feature dimension, decision threshold, and uptime; a failed or unhealthy check keeps the warning that the engine may no longer be supported.
+- **Adaptive** — look up the MD5 hash first; if there is no cache hit, upload the full file.
+- **Quick check** — upload only the MD5 hash. If the hash is not cached, no cloud verdict is returned.
+- **Full upload** — upload the entire file (server limit: 300 MB) to the third-party server for analysis. This may disclose file data unexpectedly.
+
+The settings page checks `/api/health` and provides a refresh button. When the service reports healthy, the engine card shows the engine name, feature dimension, decision threshold, and uptime; a failed or unhealthy check warns that the cloud service connection failed and the engine may no longer be supported.
 
 Xdows Model reports a three-tier verdict — `Clean`, `Suspicious`, or `Malware` — where the `Suspicious` band starts at the model's recommended threshold and `Malware` starts at its fixed threshold. The managed Invoker and the native runtime both honour the same threshold manifests, and both refuse to load a Pro model whose manifest does not match the compiled feature layout, so a partially deployed model set fails loudly instead of scoring with the wrong feature layout.
 
